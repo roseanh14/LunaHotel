@@ -17,7 +17,7 @@ The goal of this project is to develop a modern single page application using Sp
 - Spring Data JPA
 - Spring Security
 - JWT Authentication
-- PostgreSQL (Relational Database)
+- MySQL
 - Maven
 
 ### Frontend
