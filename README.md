@@ -99,7 +99,7 @@ The project will include one additional non-trivial feature as required by the a
 Two possible options are currently considered:
 
 1. Automatic OpenAPI 3 documentation generation using springdoc-openapi (Swagger).
-2. Caching REST API responses using Redis.
+2. Přihlašování pomocí SSO (Google, Microsoft...).
 
 The final selection will be made after consultation, based on technical feasibility and overall project scope.
 ---
