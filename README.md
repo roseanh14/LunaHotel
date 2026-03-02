@@ -103,3 +103,7 @@ Two possible options are currently considered:
 
 The final selection will be made after consultation, based on technical feasibility and overall project scope.
 ---
+
+## Database Diagram
+
+![ER Diagram](Luna%20ER%20diagram.png)
