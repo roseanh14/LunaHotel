@@ -1044,13 +1044,40 @@ a.room-list-cta-link {
     font-size: 1rem;
 }
 
-/* Room detail page — full width; natural hero image height */
+/* Room detail — column: login CTA outside; mint band only around room content */
+.room-details-page {
+    box-sizing: border-box;
+    width: calc(100% - 0.75rem);
+    max-width: none;
+    margin: 1rem auto 2rem;
+}
+
+.room-details-page > .room-booking-login-prompt--page-top {
+    margin-top: 0;
+    margin-bottom: 0.85rem;
+}
+
+.room-details-surface {
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+    padding: clamp(0.45rem, 1.2vw, 0.7rem);
+    background-color: var(--luna-navbar-bg);
+    border: 1px solid var(--luna-border-teal);
+    border-radius: 10px;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.65) inset;
+}
+
 .room-details-booking {
-    padding: 1rem clamp(1rem, 4vw, 2rem) 2rem;
+    padding: 1rem clamp(1rem, 3vw, 1.75rem) 1.85rem;
     max-width: none;
     width: 100%;
     margin: 0;
     box-sizing: border-box;
+    background: var(--luna-page-bg);
+    border: 1px solid var(--luna-border-teal-strong);
+    border-radius: var(--luna-radius);
+    box-shadow: var(--luna-shadow-card);
 }
 
 .room-details-booking-title {
@@ -1061,7 +1088,7 @@ a.room-list-cta-link {
 
 .room-details-image-wrap {
     width: 100%;
-    max-width: min(40rem, 100%);
+    max-width: min(36rem, 100%);
     margin: 0 auto 1rem;
     border-radius: var(--luna-radius);
     overflow: hidden;

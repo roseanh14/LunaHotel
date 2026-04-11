@@ -205,15 +205,39 @@ const RoomDetailsPage = () => {
     };
 
     if (isLoading) {
-        return <p className="room-detail-loading">Loading room details...</p>;
+        return (
+            <div className="room-details-page">
+                <div className="room-details-surface">
+                    <div className="room-details-booking">
+                        <p className="room-detail-loading">Loading room details...</p>
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     if (error) {
-        return <p className="room-detail-loading">{error}</p>;
+        return (
+            <div className="room-details-page">
+                <div className="room-details-surface">
+                    <div className="room-details-booking">
+                        <p className="room-detail-loading">{error}</p>
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     if (!roomDetails) {
-        return <p className="room-detail-loading">Room not found.</p>;
+        return (
+            <div className="room-details-page">
+                <div className="room-details-surface">
+                    <div className="room-details-booking">
+                        <p className="room-detail-loading">Room not found.</p>
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     const room = enrichRoomForModal(roomDetails);
@@ -241,16 +265,7 @@ const RoomDetailsPage = () => {
     const minCheckOutDate = selectedCheckInDate instanceof Date ? selectedCheckInDate : null;
 
     return (
-        <div className="room-details-booking">
-            {showMessage && (
-                <p className="booking-success-message">
-                    Booking successful! Confirmation code: {confirmationCode}. An SMS and email of
-                    your booking details have been sent to you.
-                </p>
-            )}
-
-            {errorMessage && <p className="error-message">{errorMessage}</p>}
-
+        <div className="room-details-page">
             {!isAuthed ? (
                 <div className="room-booking-login-prompt room-booking-login-prompt--bar room-booking-login-prompt--page-top">
                     <p>
@@ -273,6 +288,17 @@ const RoomDetailsPage = () => {
                     </div>
                 </div>
             ) : null}
+
+            <div className="room-details-surface">
+                <div className="room-details-booking">
+            {showMessage && (
+                <p className="booking-success-message">
+                    Booking successful! Confirmation code: {confirmationCode}. An SMS and email of
+                    your booking details have been sent to you.
+                </p>
+            )}
+
+            {errorMessage && <p className="error-message">{errorMessage}</p>}
 
             <h2 className="room-details-booking-title">Room Details</h2>
 
@@ -405,6 +431,8 @@ const RoomDetailsPage = () => {
                     )}
                 </div>
             ) : null}
+                </div>
+            </div>
         </div>
     );
 };
