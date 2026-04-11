@@ -82,39 +82,41 @@ const HomePage = () => {
                 />
             )}
 
-            <h4>
-                <Link className="view-rooms-home" to="/rooms">
+            <div className="home-all-rooms-cta">
+                <Link className="home-all-rooms-button" to="/rooms">
                     All Rooms
                 </Link>
-            </h4>
+            </div>
 
-            <h2 className="home-services">
-                Services at <span className="luna-color">Luna Hotel</span>
-            </h2>
+            <div className="home-services-wrap">
+                <h2 className="home-services">
+                    Services at <span className="luna-color">Luna Hotel</span>
+                </h2>
 
-            <section className="service-section">
-                {MOCK_SERVICES.map((svc) => (
-                    <div
-                        className="service-card service-card--interactive"
-                        key={svc.key}
-                        role="button"
-                        tabIndex={0}
-                        onClick={() => setSelectedService(svc)}
-                        onKeyDown={(e) => {
-                            if (e.key === "Enter" || e.key === " ") {
-                                e.preventDefault();
-                                setSelectedService(svc);
-                            }
-                        }}
-                    >
-                        <img src={svc.image} alt="" />
-                        <div className="service-details">
-                            <h3 className="service-title">{svc.title}</h3>
-                            <p className="service-description">{svc.description}</p>
+                <section className="service-section">
+                    {MOCK_SERVICES.map((svc) => (
+                        <div
+                            className="service-card service-card--interactive"
+                            key={svc.key}
+                            role="button"
+                            tabIndex={0}
+                            onClick={() => setSelectedService(svc)}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter" || e.key === " ") {
+                                    e.preventDefault();
+                                    setSelectedService(svc);
+                                }
+                            }}
+                        >
+                            <img src={svc.image} alt="" />
+                            <div className="service-details">
+                                <h3 className="service-title">{svc.title}</h3>
+                                <p className="service-description">{svc.description}</p>
+                            </div>
                         </div>
-                    </div>
-                ))}
-            </section>
+                    ))}
+                </section>
+            </div>
 
             {selectedService ? (
                 <div

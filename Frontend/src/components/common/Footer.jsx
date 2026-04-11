@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 const FooterComponent = () => {
     const year = new Date().getFullYear();
 
@@ -5,15 +7,47 @@ const FooterComponent = () => {
         <footer className="site-footer">
             <div className="site-footer-inner">
                 <div className="site-footer-grid">
-                    <div className="site-footer-col">
+                    <div className="site-footer-col site-footer-col--brand">
                         <h3 className="site-footer-brand">Luna Hotel</h3>
-                        <p className="site-footer-text">
-                            Lot 127, Jalan Pantai Cenang
-                            <br />
-                            Pantai Cenang, Langkawi
-                            <br />
-                            07000 Kedah, Malaysia
+                        <p className="site-footer-text site-footer-address">
+                            Lot 127, Jalan Pantai Cenang, Pantai Cenang, Langkawi, 07000 Kedah, Malaysia
                         </p>
+                        <h4 className="site-footer-heading site-footer-heading--inline">Awards</h4>
+                        <ul className="footer-awards-list footer-awards-list--inline" aria-label="Hotel awards">
+                            <li className="footer-award-item">
+                                <span className="footer-award-medal" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" width="20" height="20">
+                                        <path
+                                            fill="currentColor"
+                                            d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7-6.3-4.6-6.3 4.6 2.3-7-6-4.6h7.6z"
+                                        />
+                                    </svg>
+                                </span>
+                                <span className="footer-award-name">Travelers&apos; Choice</span>
+                            </li>
+                            <li className="footer-award-item">
+                                <span className="footer-award-medal footer-award-medal--leaf" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" width="20" height="20">
+                                        <path
+                                            fill="currentColor"
+                                            d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75L7 19c0-1 0.5-3.5 3-5 2.54-1.5 5.25-1.75 7.25-2.25S17 8 17 8z"
+                                        />
+                                    </svg>
+                                </span>
+                                <span className="footer-award-name">Green Key</span>
+                            </li>
+                            <li className="footer-award-item">
+                                <span className="footer-award-medal footer-award-medal--crown" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" width="20" height="20">
+                                        <path
+                                            fill="currentColor"
+                                            d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm2.7-2h8.6l.9-5.5-2.7 2-3.4-4-3.4 4-2.7-2L7.7 14z"
+                                        />
+                                    </svg>
+                                </span>
+                                <span className="footer-award-name">Luxury pick</span>
+                            </li>
+                        </ul>
                     </div>
 
                     <div className="site-footer-col">
@@ -38,28 +72,47 @@ const FooterComponent = () => {
                         </p>
                     </div>
 
-                    <div className="site-footer-col">
+                    <div className="site-footer-col site-footer-col--stay">
                         <h4 className="site-footer-heading">Stay information</h4>
                         <p className="site-footer-text">
-                            <strong>Check-in:</strong> from 3:00 PM
+                            <strong>Check-in</strong> from 3:00 PM · <strong>Check-out</strong> by 11:00 AM
                         </p>
                         <p className="site-footer-text">
-                            <strong>Check-out:</strong> by 11:00 AM
+                            <strong>Quiet hours:</strong> 10:00 PM–7:00 AM (keep noise low on corridors &
+                            balconies).
                         </p>
                         <p className="site-footer-text">
-                            <strong>Quiet hours:</strong> 10:00 PM – 7:00 AM. Please keep noise low in
-                            corridors, lanais, and on balconies.
+                            <strong>Airport transfer:</strong> not included; concierge can arrange a taxi
+                            or car (paid locally).
                         </p>
                         <p className="site-footer-text">
-                            <strong>Airport transfer:</strong> not included in the room rate. Concierge
-                            can arrange a licensed taxi or private car (paid locally).
-                        </p>
-                        <p className="site-footer-text">
-                            <strong>Reception:</strong> staffed 24 hours, 7 days a week.
+                            <strong>Reception:</strong> 24/7.
                         </p>
                     </div>
 
-                    <div className="site-footer-col">
+                    <div className="site-footer-col site-footer-col--explore">
+                        <h4 className="site-footer-heading">Explore</h4>
+                        <p className="site-footer-text">
+                            <Link className="site-footer-link" to="/home">
+                                Home
+                            </Link>
+                        </p>
+                        <p className="site-footer-text">
+                            <Link className="site-footer-link" to="/rooms">
+                                Rooms &amp; suites
+                            </Link>
+                        </p>
+                        <p className="site-footer-text">
+                            <Link className="site-footer-link" to="/find-booking">
+                                Find my booking
+                            </Link>
+                        </p>
+                        <p className="site-footer-text site-footer-text--muted">
+                            Direct booking · best rate when you reserve with us.
+                        </p>
+                    </div>
+
+                    <div className="site-footer-col site-footer-col--social">
                         <h4 className="site-footer-heading">Follow us</h4>
                         <div className="site-footer-social">
                             <a
@@ -105,45 +158,6 @@ const FooterComponent = () => {
                                 </svg>
                             </a>
                         </div>
-                    </div>
-
-                    <div className="site-footer-col">
-                        <h4 className="site-footer-heading">Awards</h4>
-                        <ul className="footer-awards-list" aria-label="Hotel awards">
-                            <li className="footer-award-item">
-                                <span className="footer-award-medal" aria-hidden="true">
-                                    <svg viewBox="0 0 24 24" width="20" height="20">
-                                        <path
-                                            fill="currentColor"
-                                            d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7-6.3-4.6-6.3 4.6 2.3-7-6-4.6h7.6z"
-                                        />
-                                    </svg>
-                                </span>
-                                <span className="footer-award-name">Travelers&apos; Choice</span>
-                            </li>
-                            <li className="footer-award-item">
-                                <span className="footer-award-medal footer-award-medal--leaf" aria-hidden="true">
-                                    <svg viewBox="0 0 24 24" width="20" height="20">
-                                        <path
-                                            fill="currentColor"
-                                            d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75L7 19c0-1 0.5-3.5 3-5 2.54-1.5 5.25-1.75 7.25-2.25S17 8 17 8z"
-                                        />
-                                    </svg>
-                                </span>
-                                <span className="footer-award-name">Green Key</span>
-                            </li>
-                            <li className="footer-award-item">
-                                <span className="footer-award-medal footer-award-medal--crown" aria-hidden="true">
-                                    <svg viewBox="0 0 24 24" width="20" height="20">
-                                        <path
-                                            fill="currentColor"
-                                            d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm2.7-2h8.6l.9-5.5-2.7 2-3.4-4-3.4 4-2.7-2L7.7 14z"
-                                        />
-                                    </svg>
-                                </span>
-                                <span className="footer-award-name">Luxury pick</span>
-                            </li>
-                        </ul>
                     </div>
                 </div>
 

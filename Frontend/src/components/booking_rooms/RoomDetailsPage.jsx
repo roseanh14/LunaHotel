@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
 import ApiService from '../../service/ApiService';
 import RoomFeatureIconStrip from '../common/RoomFeatureIconStrip.jsx';
+import { enrichRoomForModal } from '../../utils/roomModalDefaults.js';
 import DatePicker from 'react-datepicker';
 // import 'react-datepicker/dist/react-datepicker.css';
 
@@ -99,27 +100,14 @@ const RoomDetailsPage = () => {
             const startDate = new Date(checkInDate);
             const endDate = new Date(checkOutDate);
 
-            // Log the original dates for debugging
-            console.log("Original Check-in Date:", startDate);
-            console.log("Original Check-out Date:", endDate);
-
-            // Convert dates to YYYY-MM-DD format, adjusting for time zone differences
             const formattedCheckInDate = new Date(startDate.getTime() - (startDate.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
             const formattedCheckOutDate = new Date(endDate.getTime() - (endDate.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
 
-
-            // Log the original dates for debugging
-            console.log("Formated Check-in Date:", formattedCheckInDate);
-            console.log("Formated Check-out Date:", formattedCheckOutDate);
-
-            // Create booking object
             const booking = {
                 checkInDate: formattedCheckInDate,
                 checkOutDate: formattedCheckOutDate,
                 numOfAdults: numAdults,
             };
-            console.log(booking)
-            console.log(checkOutDate)
 
             // Make booking
             const response = await ApiService.bookRoom(roomId, userId, booking);
@@ -150,6 +138,7 @@ const RoomDetailsPage = () => {
         return <p className='room-detail-loading'>Room not found.</p>;
     }
 
+    const room = enrichRoomForModal(roomDetails);
     const {
         roomType,
         roomPrice,
@@ -158,7 +147,11 @@ const RoomDetailsPage = () => {
         bookings,
         roomDescription,
         roomFeatureIconKeys,
-    } = roomDetails;
+        roomTagline,
+        maxGuests,
+        amenitiesInRoom,
+        resortServicesIncluded,
+    } = room;
     const aboutText = description || roomDescription || '';
     const isStaff = ApiService.isAdmin();
     const isAuthed = ApiService.isAuthenticated();
@@ -175,20 +168,60 @@ const RoomDetailsPage = () => {
                     {errorMessage}
                 </p>
             )}
+            {!isAuthed ? (
+                <div className="room-booking-login-prompt room-booking-login-prompt--bar room-booking-login-prompt--page-top">
+                    <p>
+                        To <strong>book</strong> it, log in or register—then you can pick dates and complete your
+                        reservation.
+                    </p>
+                    <div className="room-booking-login-actions">
+                        <Link className="book-now-button room-booking-login-link" to="/login" state={{ from: location }}>
+                            Log in to book
+                        </Link>
+                        <Link className="go-back-button room-booking-login-link" to="/register">
+                            Register
+                        </Link>
+                    </div>
+                </div>
+            ) : null}
+
             <h2 className="room-details-booking-title">Room Details</h2>
+
             <div className="room-details-image-wrap">
                 <img src={roomPhotoUrl} alt={roomType} className="room-details-image" />
             </div>
             <div className="room-details-info">
                 <h3>{roomType}</h3>
-                <p>Price: ${roomPrice} / night</p>
+                {roomTagline ? <p className="room-detail-tagline">{roomTagline}</p> : null}
+                <p className="room-detail-price-line">Price: ${roomPrice} / night</p>
+                <p className="room-detail-sleeps">Up to {maxGuests} guests</p>
                 {aboutText ? <p className="room-detail-about">{aboutText}</p> : null}
+
+                {amenitiesInRoom?.length > 0 ? (
+                    <>
+                        <h4 className="room-detail-subheading">Amenities in your room</h4>
+                        <ul className="room-detail-amenities-list">
+                            {amenitiesInRoom.map((item) => (
+                                <li key={item}>{item}</li>
+                            ))}
+                        </ul>
+                    </>
+                ) : null}
+
                 <h4 className="room-detail-subheading">Room highlights</h4>
                 <RoomFeatureIconStrip iconKeys={roomFeatureIconKeys} />
+
+                {resortServicesIncluded ? (
+                    <>
+                        <h4 className="room-detail-subheading">Included across the resort</h4>
+                        <p className="room-detail-resort-copy">{resortServicesIncluded}</p>
+                    </>
+                ) : null}
             </div>
-            {isStaff && bookings && bookings.length > 0 && (
-                <div>
-                    <h3>Existing Booking Details (staff)</h3>
+
+            {isStaff && bookings && bookings.length > 0 ? (
+                <div className="room-details-staff-block">
+                    <h3 className="room-details-staff-title">Existing bookings (staff)</h3>
                     <ul className="booking-list">
                         {bookings.map((booking, index) => (
                             <li key={booking.id} className="booking-item">
@@ -199,7 +232,8 @@ const RoomDetailsPage = () => {
                         ))}
                     </ul>
                 </div>
-            )}
+            ) : null}
+
             {isAuthed ? (
                 <div className="booking-info">
                     <button className="book-now-button" onClick={() => setShowDatePicker(true)}>
@@ -255,28 +289,13 @@ const RoomDetailsPage = () => {
                         <div className="total-price">
                             <p>Total Price: ${totalPrice}</p>
                             <p>Guests: {totalGuests}</p>
-                            <button onClick={acceptBooking} className="accept-booking">
+                            <button type="button" onClick={acceptBooking} className="accept-booking">
                                 Accept Booking
                             </button>
                         </div>
                     )}
                 </div>
-            ) : (
-                <div className="room-booking-login-prompt">
-                    <p>
-                        To <strong>book</strong> it, you must be logged in or registered—only then can you
-                        choose dates and complete a reservation.
-                    </p>
-                    <div className="room-booking-login-actions">
-                        <Link className="book-now-button room-booking-login-link" to="/login" state={{ from: location }}>
-                            Log in to book
-                        </Link>
-                        <Link className="go-back-button room-booking-login-link" to="/register">
-                            Register
-                        </Link>
-                    </div>
-                </div>
-            )}
+            ) : null}
         </div>
     );
 };
