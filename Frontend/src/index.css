@@ -1076,6 +1076,7 @@ a.room-list-cta-link {
     box-sizing: border-box;
     background: var(--luna-page-bg);
     border: 1px solid var(--luna-border-teal-strong);
+    border-left: 3px solid var(--luna-accent-highlight);
     border-radius: var(--luna-radius);
     box-shadow: var(--luna-shadow-card);
 }
@@ -1630,7 +1631,7 @@ a.room-booking-login-link.go-back-button {
     font-size: 0.82rem;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: var(--luna-turquoise-deep);
+    color: var(--luna-accent-highlight);
     font-weight: 700;
 }
 

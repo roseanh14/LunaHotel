@@ -269,8 +269,8 @@ const RoomDetailsPage = () => {
             {!isAuthed ? (
                 <div className="room-booking-login-prompt room-booking-login-prompt--bar room-booking-login-prompt--page-top">
                     <p>
-                        To <strong>book</strong> it, log in or register—then you can pick dates and
-                        complete your reservation.
+                        To <span className="luna-color">book</span> it, log in or register—then you
+                        can pick dates and complete your reservation.
                     </p>
 
                     <div className="room-booking-login-actions">
@@ -300,7 +300,9 @@ const RoomDetailsPage = () => {
 
             {errorMessage && <p className="error-message">{errorMessage}</p>}
 
-            <h2 className="room-details-booking-title">Room Details</h2>
+            <h2 className="room-details-booking-title">
+                Room <span className="luna-color">Details</span>
+            </h2>
 
             <div className="room-details-image-wrap">
                 <img src={roomPhotoUrl} alt={roomType} className="room-details-image" />
