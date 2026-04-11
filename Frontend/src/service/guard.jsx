@@ -2,22 +2,22 @@ import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import ApiService from './ApiService.js';
 
-export const ProtectedRoute = ({ element: Component }) => {
+export const ProtectedRoute = ({ children }) => {
     const location = useLocation();
 
-    return ApiService.isAuthenticated() ? (
-        <Component />
-    ) : (
-        <Navigate to="/login" replace state={{ from: location }} />
-    );
+    if (!ApiService.isAuthenticated()) {
+        return <Navigate to="/login" replace state={{ from: location }} />;
+    }
+
+    return children;
 };
 
-export const AdminRoute = ({ element: Component }) => {
+export const AdminRoute = ({ children }) => {
     const location = useLocation();
 
-    return ApiService.isAdmin() ? (
-        <Component />
-    ) : (
-        <Navigate to="/login" replace state={{ from: location }} />
-    );
+    if (!ApiService.isAdmin()) {
+        return <Navigate to="/login" replace state={{ from: location }} />;
+    }
+
+    return children;
 };

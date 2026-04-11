@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import RoomResult from "../common/RoomResult";
-import RoomSearch from "../common/RoomSearch";
-import { MOCK_SERVICES } from "../../data/mockHotelData";
-import ApiService from "../../service/ApiService";
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import RoomResult from '../common/RoomResult';
+import RoomSearch from '../common/RoomSearch';
+import { MOCK_SERVICES } from '../../data/mockHotelData';
+import ApiService from '../../service/ApiService';
 
 const HomePage = () => {
     const [roomSearchResults, setRoomSearchResults] = useState([]);
@@ -24,7 +24,7 @@ const HomePage = () => {
                     setRoomSearchResults(response.roomList);
                 }
             } catch (e) {
-                console.error("Failed to load rooms on home:", e);
+                console.error('Failed to load rooms on home:', e);
             } finally {
                 if (!cancelled) setRoomsLoading(false);
             }
@@ -37,13 +37,13 @@ const HomePage = () => {
     useEffect(() => {
         if (!selectedService) return undefined;
         const onKey = (e) => {
-            if (e.key === "Escape") setSelectedService(null);
+            if (e.key === 'Escape') setSelectedService(null);
         };
-        document.addEventListener("keydown", onKey);
+        document.addEventListener('keydown', onKey);
         const prevOverflow = document.body.style.overflow;
-        document.body.style.overflow = "hidden";
+        document.body.style.overflow = 'hidden';
         return () => {
-            document.removeEventListener("keydown", onKey);
+            document.removeEventListener('keydown', onKey);
             document.body.style.overflow = prevOverflow;
         };
     }, [selectedService]);
@@ -52,19 +52,13 @@ const HomePage = () => {
         <div className="home">
             <section>
                 <header className="header-banner">
-                    <img
-                        src="/assets/images/hotel.jpg"
-                        alt="Luna Hotel"
-                        className="header-image"
-                    />
+                    <img src="/assets/images/hotel.jpg" alt="Luna Hotel" className="header-image" />
 
                     <div className="animated-texts overlay-content">
                         <h1>
                             Welcome to <span className="luna-color">Luna Hotel</span>
                         </h1>
-                        <h3 className="home-hero-tagline">
-                            Step into a haven of comfort and care
-                        </h3>
+                        <h3 className="home-hero-tagline">Step into a haven of comfort and care</h3>
                     </div>
                 </header>
             </section>
@@ -102,7 +96,7 @@ const HomePage = () => {
                             tabIndex={0}
                             onClick={() => setSelectedService(svc)}
                             onKeyDown={(e) => {
-                                if (e.key === "Enter" || e.key === " ") {
+                                if (e.key === 'Enter' || e.key === ' ') {
                                     e.preventDefault();
                                     setSelectedService(svc);
                                 }
@@ -150,12 +144,8 @@ const HomePage = () => {
                             <h3 id="service-modal-title" className="service-modal-title">
                                 {selectedService.title}
                             </h3>
-                            <p className="service-modal-lead">
-                                {selectedService.description}
-                            </p>
-                            <p className="service-modal-detail">
-                                {selectedService.detail}
-                            </p>
+                            <p className="service-modal-lead">{selectedService.description}</p>
+                            <p className="service-modal-detail">{selectedService.detail}</p>
                         </div>
                     </div>
                 </div>

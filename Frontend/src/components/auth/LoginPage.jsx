@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { useNavigate,useLocation } from "react-router-dom";
-import ApiService from "../../service/ApiService";
+import React, { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import ApiService from '../../service/ApiService';
 
 function LoginPage() {
     const [email, setEmail] = useState('');
@@ -10,7 +10,6 @@ function LoginPage() {
     const location = useLocation();
 
     const from = location.state?.from?.pathname || '/home';
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -22,7 +21,7 @@ function LoginPage() {
         }
 
         try {
-            const response = await ApiService.loginUser({email, password});
+            const response = await ApiService.loginUser({ email, password });
             if (response.statusCode === 200) {
                 localStorage.setItem('token', response.token);
                 localStorage.setItem('role', response.role);

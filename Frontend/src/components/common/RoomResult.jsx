@@ -35,11 +35,7 @@ const RoomResult = ({ roomSearchResults, afterAvailabilitySearch = false }) => {
                             }}
                             aria-label={ariaLabelForCard(room)}
                         >
-                            <img
-                                className="room-list-item-image"
-                                src={room.roomPhotoUrl}
-                                alt=""
-                            />
+                            <img className="room-list-item-image" src={room.roomPhotoUrl} alt="" />
 
                             <div className="room-details">
                                 <h3>{room.roomType}</h3>

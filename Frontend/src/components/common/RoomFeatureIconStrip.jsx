@@ -11,7 +11,14 @@ const svgProps = {
 
 function Svg({ children, className }) {
     return (
-        <svg {...svgProps} className={className} stroke="currentColor" strokeWidth="1.65" strokeLinecap="round" strokeLinejoin="round">
+        <svg
+            {...svgProps}
+            className={className}
+            stroke="currentColor"
+            strokeWidth="1.65"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
             {children}
         </svg>
     );

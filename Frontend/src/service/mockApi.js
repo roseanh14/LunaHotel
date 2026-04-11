@@ -8,11 +8,14 @@ import {
 } from '../data/mockHotelData.js';
 
 export function isMockApiEnabled() {
-    return import.meta.env.VITE_USE_MOCK_DATA === 'true';
+    const env = typeof import.meta !== 'undefined' ? import.meta.env : undefined;
+    return env && env['VITE_USE_MOCK_DATA'] === 'true';
 }
 
-export function mockDelay(ms = 200) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
+function mockDelay(ms = 200) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+    });
 }
 
 export async function mockGetAllRooms() {
@@ -27,8 +30,13 @@ export async function mockGetRoomTypes() {
 
 export async function mockGetRoomById(roomId) {
     await mockDelay(150);
+
     const data = getMockRoomById(roomId);
-    if (!data) throw new Error('Room not found');
+
+    if (!data) {
+        throw new Error('Room not found');
+    }
+
     return data;
 }
 
@@ -39,6 +47,7 @@ export async function mockGetAvailableRoomsByDateAndType(checkInDate, checkOutDa
 
 export async function mockGetUserProfile() {
     await mockDelay(100);
+
     return {
         user: {
             id: 101,
@@ -49,25 +58,44 @@ export async function mockGetUserProfile() {
     };
 }
 
-export async function mockBookRoom(_roomId, _userId, _booking) {
+export async function mockBookRoom(roomId, userId, booking) {
     await mockDelay(250);
+
+    void roomId;
+    void userId;
+    void booking;
+
     const sixDigits = String(100000 + Math.floor(Math.random() * 900000));
     const code = `LH-${sixDigits}`;
-    return { statusCode: 200, bookingConfirmationCode: code };
+
+    return {
+        statusCode: 200,
+        bookingConfirmationCode: code,
+    };
 }
 
 export async function mockGetAllBookings() {
     await mockDelay(180);
-    return { bookingList: MOCK_BOOKINGS_ADMIN.map((b) => ({ ...b })) };
+
+    return {
+        bookingList: MOCK_BOOKINGS_ADMIN.map((bookingItem) => ({ ...bookingItem })),
+    };
 }
 
 export async function mockGetBookingByConfirmationCode(bookingCode) {
     await mockDelay(200);
+
     const data = getMockBookingByCode(bookingCode);
+
     if (!data) {
-        const err = new Error('Booking not found');
-        err.response = { data: { message: 'No booking matches this code.' } };
-        throw err;
+        const error = new Error('Booking not found');
+        error.response = {
+            data: {
+                message: 'No booking matches this code.',
+            },
+        };
+        throw error;
     }
+
     return data;
 }

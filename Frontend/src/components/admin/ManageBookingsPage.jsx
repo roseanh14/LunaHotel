@@ -1,61 +1,72 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ApiService from '../../service/ApiService';
 import Pagination from '../common/Pagination';
 
 const ManageBookingsPage = () => {
     const [bookings, setBookings] = useState([]);
-    const [filteredBookings, setFilteredBookings] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const [bookingsPerPage] = useState(6);
     const navigate = useNavigate();
 
+    const bookingsPerPage = 6;
+
     useEffect(() => {
-        const fetchBookings = async () => {
+        async function fetchBookings() {
             try {
                 const response = await ApiService.getAllBookings();
-                const allBookings = response.bookingList;
-                setBookings(allBookings);
-                setFilteredBookings(allBookings);
-            } catch (error) {
-                console.error('Error fetching bookings:', error.message);
-            }
-        };
+                const allBookings =
+                    response && Array.isArray(response.bookingList)
+                        ? response.bookingList
+                        : [];
 
-        fetchBookings();
+                setBookings(allBookings);
+            } catch (error) {
+                console.error(
+                    'Error fetching bookings:',
+                    error instanceof Error ? error.message : 'Unknown error'
+                );
+            }
+        }
+
+        void fetchBookings();
     }, []);
 
-    useEffect(() => {
-        filterBookings(searchTerm);
-    }, [searchTerm, bookings]);
-
-    const filterBookings = (term) => {
-        if (term === '') {
-            setFilteredBookings(bookings);
-        } else {
-            const filtered = bookings.filter((booking) =>
-                booking.bookingConfirmationCode && booking.bookingConfirmationCode.toLowerCase().includes(term.toLowerCase())
-            );
-            setFilteredBookings(filtered);
+    const filteredBookings = useMemo(() => {
+        if (!searchTerm) {
+            return bookings;
         }
-        setCurrentPage(1);
-    };
 
-    const handleSearchChange = (e) => {
-        setSearchTerm(e.target.value);
-    };
+        return bookings.filter((booking) => {
+            return (
+                booking &&
+                typeof booking.bookingConfirmationCode === 'string' &&
+                booking.bookingConfirmationCode.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+        });
+    }, [bookings, searchTerm]);
 
     const indexOfLastBooking = currentPage * bookingsPerPage;
     const indexOfFirstBooking = indexOfLastBooking - bookingsPerPage;
-    const currentBookings = filteredBookings.slice(indexOfFirstBooking, indexOfLastBooking);
 
-    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+    const currentBookings = useMemo(() => {
+        return filteredBookings.slice(indexOfFirstBooking, indexOfLastBooking);
+    }, [filteredBookings, indexOfFirstBooking, indexOfLastBooking]);
+
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+        setCurrentPage(1);
+    };
+
+    const paginate = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
 
     return (
-        <div className='bookings-container'>
+        <div className="bookings-container">
             <h2>All Bookings</h2>
-            <div className='search-div'>
+
+            <div className="search-div">
                 <label>Filter by Booking Number:</label>
                 <input
                     type="text"
@@ -68,14 +79,26 @@ const ManageBookingsPage = () => {
             <div className="booking-results">
                 {currentBookings.map((booking) => (
                     <div key={booking.id} className="booking-result-item">
-                        <p><strong>Booking Code:</strong> {booking.bookingConfirmationCode}</p>
-                        <p><strong>Check In Date:</strong> {booking.checkInDate}</p>
-                        <p><strong>Check out Date:</strong> {booking.checkOutDate}</p>
-                        <p><strong>Guests:</strong> {booking.totalNumOfGuest}</p>
+                        <p>
+                            <strong>Booking Code:</strong> {booking.bookingConfirmationCode}
+                        </p>
+                        <p>
+                            <strong>Check In Date:</strong> {booking.checkInDate}
+                        </p>
+                        <p>
+                            <strong>Check Out Date:</strong> {booking.checkOutDate}
+                        </p>
+                        <p>
+                            <strong>Guests:</strong> {booking.totalNumOfGuest}
+                        </p>
                         <button
                             className="edit-room-button"
-                            onClick={() => navigate(`/admin/edit-booking/${booking.bookingConfirmationCode}`)}
-                        >Manage Booking</button>
+                            onClick={() =>
+                                navigate(`/admin/edit-booking/${booking.bookingConfirmationCode}`)
+                            }
+                        >
+                            Manage Booking
+                        </button>
                     </div>
                 ))}
             </div>

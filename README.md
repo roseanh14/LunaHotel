@@ -171,3 +171,9 @@ cd Backend
 ## License
 
 This repository is provided as a **portfolio / showcase** project. Add a license file if you want to clarify reuse terms.
+
+## Formating code
+cd Backend
+.\mvnw.cmd io.spring.javaformat:spring-javaformat-maven-plugin:0.0.43:apply
+cd Frontend
+npm run format

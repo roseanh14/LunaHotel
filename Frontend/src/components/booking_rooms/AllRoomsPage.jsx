@@ -1,79 +1,85 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import ApiService from '../../service/ApiService';
 import Pagination from '../common/Pagination';
 import RoomResult from '../common/RoomResult';
 import RoomSearch from '../common/RoomSearch';
 
-
-
 const AllRoomsPage = () => {
     const [rooms, setRooms] = useState([]);
-    const [filteredRooms, setFilteredRooms] = useState([]);
     const [roomTypes, setRoomTypes] = useState([]);
     const [selectedRoomType, setSelectedRoomType] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const [roomsPerPage] = useState(5);
     const [afterAvailabilitySearch, setAfterAvailabilitySearch] = useState(false);
 
-    // Function to handle search results
+    const roomsPerPage = 5;
+
     const handleSearchResult = (results) => {
-        setRooms(results);
-        setFilteredRooms(results);
+        const safeResults = Array.isArray(results) ? results : [];
+        setRooms(safeResults);
+        setCurrentPage(1);
     };
 
-
     useEffect(() => {
-        const fetchRooms = async () => {
+        async function fetchData() {
             try {
-                const response = await ApiService.getAllRooms();
-                const allRooms = response.roomList;
+                const [roomsResponse, roomTypesResponse] = await Promise.all([
+                    ApiService.getAllRooms(),
+                    ApiService.getRoomTypes(),
+                ]);
+
+                const allRooms =
+                    roomsResponse && Array.isArray(roomsResponse.roomList)
+                        ? roomsResponse.roomList
+                        : [];
+
+                const allRoomTypes = Array.isArray(roomTypesResponse)
+                    ? roomTypesResponse.filter((type) => typeof type === 'string')
+                    : [];
+
                 setRooms(allRooms);
-                setFilteredRooms(allRooms);
+                setRoomTypes(allRoomTypes);
             } catch (error) {
-                console.error('Error fetching rooms:', error.message);
+                console.error(
+                    'Error fetching room data:',
+                    error instanceof Error ? error.message : 'Unknown error'
+                );
             }
-        };
+        }
 
-        const fetchRoomTypes = async () => {
-            try {
-                const types = await ApiService.getRoomTypes();
-                setRoomTypes(types);
-            } catch (error) {
-                console.error('Error fetching room types:', error.message);
-            }
-        };
-
-        fetchRooms();
-        fetchRoomTypes();
+        void fetchData();
     }, []);
 
     const handleRoomTypeChange = (e) => {
         setSelectedRoomType(e.target.value);
-        filterRooms(e.target.value);
+        setCurrentPage(1);
     };
 
-    const filterRooms = (type) => {
-        if (type === '') {
-            setFilteredRooms(rooms);
-        } else {
-            const filtered = rooms.filter((room) => room.roomType === type);
-            setFilteredRooms(filtered);
+    const filteredRooms = useMemo(() => {
+        if (!selectedRoomType) {
+            return rooms;
         }
-        setCurrentPage(1); // Reset to first page after filtering
-    };
 
-    // Pagination
+        return rooms.filter((room) => {
+            return room && room.roomType === selectedRoomType;
+        });
+    }, [rooms, selectedRoomType]);
+
     const indexOfLastRoom = currentPage * roomsPerPage;
     const indexOfFirstRoom = indexOfLastRoom - roomsPerPage;
-    const currentRooms = filteredRooms.slice(indexOfFirstRoom, indexOfLastRoom);
 
-    // Change page
-    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+    const currentRooms = useMemo(() => {
+        return filteredRooms.slice(indexOfFirstRoom, indexOfLastRoom);
+    }, [filteredRooms, indexOfFirstRoom, indexOfLastRoom]);
+
+    const paginate = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
 
     return (
-        <div className='all-rooms'>
+        <div className="all-rooms">
             <h2>All Rooms</h2>
-            <div className='all-room-filter-div'>
+
+            <div className="all-room-filter-div">
                 <label>Filter by Room Type:</label>
                 <select value={selectedRoomType} onChange={handleRoomTypeChange}>
                     <option value="">All</option>
@@ -89,6 +95,7 @@ const AllRoomsPage = () => {
                 handleSearchResult={handleSearchResult}
                 onSearchSuccess={() => setAfterAvailabilitySearch(true)}
             />
+
             <RoomResult
                 roomSearchResults={currentRooms}
                 afterAvailabilitySearch={afterAvailabilitySearch}

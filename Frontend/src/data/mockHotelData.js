@@ -1,8 +1,3 @@
-/**
- * Luna Hotel seed data — rooms match /public/assets/rooms/*.png
- * Used when VITE_USE_MOCK_DATA=true (see .env.development).
- */
-
 const desc = (text) => text.trim();
 
 export const MOCK_ROOMS = [
@@ -33,7 +28,7 @@ export const MOCK_ROOMS = [
         id: 2,
         roomType: 'Garden Twin Suite',
         roomPrice: 329,
-        roomPhotoUrl: '/assets/rooms/Familyroom.png',
+        roomPhotoUrl: '/assets/rooms/FamilyRoom.png',
         isBooked: false,
         bookings: [
             {
@@ -283,12 +278,7 @@ export function getMockAvailableByDateAndType(checkInDate, checkOutDate, roomTyp
     const list = MOCK_ROOMS.filter((r) => r.roomType === roomType).map((r) => {
         const bookings = (r.bookings || []).map((b) => ({ ...b }));
         const blockedByStay = bookings.some((b) =>
-            mockStayRangesOverlap(
-                checkInDate,
-                checkOutDate,
-                b.checkInDate,
-                b.checkOutDate
-            )
+            mockStayRangesOverlap(checkInDate, checkOutDate, b.checkInDate, b.checkOutDate)
         );
         const permanentlyClosed = r.isBooked && (!r.bookings || r.bookings.length === 0);
         return {
@@ -307,8 +297,7 @@ export const MOCK_SERVICES = [
         image: '/assets/services/Pool.png',
         description:
             'Heated infinity pool with cabanas, poolside bar service, and quiet lounger zones.',
-        detail:
-            'Our signature infinity edge faces the ocean, with temperature-controlled water year-round. Complimentary towels, sun cream stations, and shallow areas for families. Pool attendants are on duty from mid-morning until sunset.',
+        detail: 'Our signature infinity edge faces the ocean, with temperature-controlled water year-round. Complimentary towels, sun cream stations, and shallow areas for families. Pool attendants are on duty from mid-morning until sunset.',
     },
     {
         key: 'spa',
@@ -316,8 +305,7 @@ export const MOCK_SERVICES = [
         image: '/assets/services/Spa.png',
         description:
             'Massages, facials, and hydrotherapy. Book couples rituals or quick express treatments.',
-        detail:
-            'Treatment suites overlook the gardens. We use botanical oils and offer steam, sauna, and a relaxation lounge with herbal tea. Reserve at least 24 hours ahead for weekend slots.',
+        detail: 'Treatment suites overlook the gardens. We use botanical oils and offer steam, sauna, and a relaxation lounge with herbal tea. Reserve at least 24 hours ahead for weekend slots.',
     },
     {
         key: 'breakfast',
@@ -325,17 +313,14 @@ export const MOCK_SERVICES = [
         image: '/assets/services/Breakfast.png',
         description:
             'Fresh tropical fruit, pastries, eggs to order, and barista coffee every morning.',
-        detail:
-            'Served in the main dining room and on the terrace when weather allows. Gluten-free and plant-based options are labeled; tell your server about any allergies. Typical hours: 6:30–10:30.',
+        detail: 'Served in the main dining room and on the terrace when weather allows. Gluten-free and plant-based options are labeled; tell your server about any allergies. Typical hours: 6:30–10:30.',
     },
     {
         key: 'dining',
         title: 'Fine dining',
         image: '/assets/services/FineDining.png',
-        description:
-            'Chef’s tasting menus and wine pairings with sunset seating on the terrace.',
-        detail:
-            'Seasonal menus highlight local seafood and produce. Dress code is smart casual; jackets not required. We recommend booking dinner on arrival—window tables for sunset are limited.',
+        description: 'Chef’s tasting menus and wine pairings with sunset seating on the terrace.',
+        detail: 'Seasonal menus highlight local seafood and produce. Dress code is smart casual; jackets not required. We recommend booking dinner on arrival—window tables for sunset are limited.',
     },
     {
         key: 'fitness',
@@ -343,8 +328,7 @@ export const MOCK_SERVICES = [
         image: '/assets/services/FitnessCenter.png',
         description:
             'Cardio, free weights, yoga mats, and chilled towels. Open from dawn to late evening.',
-        detail:
-            'Air-conditioned gym with treadmills, bikes, and a small functional-training zone. Complimentary water and headphones. Personal training can be arranged through the front desk.',
+        detail: 'Air-conditioned gym with treadmills, bikes, and a small functional-training zone. Complimentary water and headphones. Personal training can be arranged through the front desk.',
     },
     {
         key: 'beach-club',
@@ -352,8 +336,7 @@ export const MOCK_SERVICES = [
         image: '/assets/services/BeachClub.png',
         description:
             'Loungers, umbrellas, and water sports desk for kayaks, snorkels, and paddleboards.',
-        detail:
-            'Beach staff set up loungers and umbrellas daily. Non-motorized equipment is included for guests; lessons and guided snorkels are available for a fee. Showers and changing rooms are steps from the sand.',
+        detail: 'Beach staff set up loungers and umbrellas daily. Non-motorized equipment is included for guests; lessons and guided snorkels are available for a fee. Showers and changing rooms are steps from the sand.',
     },
     {
         key: 'lounge',
@@ -361,26 +344,21 @@ export const MOCK_SERVICES = [
         image: '/assets/services/Lounge.png',
         description:
             'Afternoon tea, cocktails, and live acoustic sets in a relaxed island setting.',
-        detail:
-            'Open all day for coffee and pastries, switching to cocktails and small plates in the evening. Live music is scheduled several nights a week—check the daily program at reception.',
+        detail: 'Open all day for coffee and pastries, switching to cocktails and small plates in the evening. Live music is scheduled several nights a week—check the daily program at reception.',
     },
     {
         key: 'lobby',
         title: 'Arrival experience',
         image: '/assets/services/HotelLobby.png',
-        description:
-            'Open-air lobby with welcome drink, concierge, and express check-in kiosks.',
-        detail:
-            'You’ll be greeted with a cool towel and a signature welcome drink. Concierge can arrange transfers, excursions, and restaurant bookings. Luggage assistance is available from the porte-cochère.',
+        description: 'Open-air lobby with welcome drink, concierge, and express check-in kiosks.',
+        detail: 'You’ll be greeted with a cool towel and a signature welcome drink. Concierge can arrange transfers, excursions, and restaurant bookings. Luggage assistance is available from the porte-cochère.',
     },
     {
         key: 'pathway',
         title: 'Garden pathways',
         image: '/assets/services/Pathway.png',
-        description:
-            'Lit walking paths through palms—ideal for morning jogs or evening strolls.',
-        detail:
-            'Well-maintained paths connect the rooms, pool, and beach without crossing service roads. Low landscape lighting keeps evening walks safe and preserves the night sky for stargazing.',
+        description: 'Lit walking paths through palms—ideal for morning jogs or evening strolls.',
+        detail: 'Well-maintained paths connect the rooms, pool, and beach without crossing service roads. Low landscape lighting keeps evening walks safe and preserves the night sky for stargazing.',
     },
     {
         key: 'wifi',
@@ -388,17 +366,14 @@ export const MOCK_SERVICES = [
         image: '/assets/images/wifi.jpg',
         description:
             'Complimentary high-speed wireless internet in every room, suite, and main public areas.',
-        detail:
-            'Connect on arrival with the password in your welcome folder. Bandwidth supports video calls and streaming; if you need a dedicated line for work, ask the front desk for a premium upgrade subject to availability.',
+        detail: 'Connect on arrival with the password in your welcome folder. Bandwidth supports video calls and streaming; if you need a dedicated line for work, ask the front desk for a premium upgrade subject to availability.',
     },
     {
         key: 'parking',
         title: 'Parking',
         image: '/assets/images/parking.jpg',
-        description:
-            'On-site spaces for cars and scooters—self-park or valet through reception.',
-        detail:
-            'Covered and open-air bays are close to the lobby. Electric-vehicle chargers are available on a first-come basis; reserve valet the evening before if you prefer hand-over keys on arrival. Street overflow is not required for most stays.',
+        description: 'On-site spaces for cars and scooters—self-park or valet through reception.',
+        detail: 'Covered and open-air bays are close to the lobby. Electric-vehicle chargers are available on a first-come basis; reserve valet the evening before if you prefer hand-over keys on arrival. Street overflow is not required for most stays.',
     },
     {
         key: 'nightscape',
@@ -406,8 +381,7 @@ export const MOCK_SERVICES = [
         image: '/assets/services/ResortNightscape.png',
         description:
             'Subtle lighting across pools and gardens for a calm, resort-night atmosphere.',
-        detail:
-            'We use warm, downward-facing fixtures to avoid glare and protect wildlife. Pool and garden areas stay gently illuminated until late night so you can enjoy the grounds safely after dinner.',
+        detail: 'We use warm, downward-facing fixtures to avoid glare and protect wildlife. Pool and garden areas stay gently illuminated until late night so you can enjoy the grounds safely after dinner.',
     },
 ];
 
@@ -436,13 +410,15 @@ export const MOCK_BOOKINGS_ADMIN = [
 ];
 
 export function getMockBookingByCode(code) {
-    const normalized = String(code || '').trim().toUpperCase().replace(/\s/g, '');
+    const normalized = String(code || '')
+        .trim()
+        .toUpperCase()
+        .replace(/\s/g, '');
     if (normalized !== 'LH-284719' && normalized !== 'LH-915302') {
         return null;
     }
     if (normalized === 'LH-284719') {
-        const room =
-            MOCK_ROOMS.find((r) => r.roomType === 'Honeymoon Suite') || MOCK_ROOMS[2];
+        const room = MOCK_ROOMS.find((r) => r.roomType === 'Honeymoon Suite') || MOCK_ROOMS[2];
         return {
             booking: {
                 bookingConfirmationCode: normalized,
@@ -463,8 +439,7 @@ export function getMockBookingByCode(code) {
             },
         };
     }
-    const room2 =
-        MOCK_ROOMS.find((r) => r.roomType === 'Overwater Bungalow') || MOCK_ROOMS[4];
+    const room2 = MOCK_ROOMS.find((r) => r.roomType === 'Overwater Bungalow') || MOCK_ROOMS[4];
     return {
         booking: {
             bookingConfirmationCode: normalized,

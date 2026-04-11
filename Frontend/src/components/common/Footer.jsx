@@ -10,10 +10,14 @@ const FooterComponent = () => {
                     <div className="site-footer-col site-footer-col--brand">
                         <h3 className="site-footer-brand">Luna Hotel</h3>
                         <p className="site-footer-text site-footer-address">
-                            Lot 127, Jalan Pantai Cenang, Pantai Cenang, Langkawi, 07000 Kedah, Malaysia
+                            Lot 127, Jalan Pantai Cenang, Pantai Cenang, Langkawi, 07000 Kedah,
+                            Malaysia
                         </p>
                         <h4 className="site-footer-heading site-footer-heading--inline">Awards</h4>
-                        <ul className="footer-awards-list footer-awards-list--inline" aria-label="Hotel awards">
+                        <ul
+                            className="footer-awards-list footer-awards-list--inline"
+                            aria-label="Hotel awards"
+                        >
                             <li className="footer-award-item">
                                 <span className="footer-award-medal" aria-hidden="true">
                                     <svg viewBox="0 0 24 24" width="20" height="20">
@@ -26,7 +30,10 @@ const FooterComponent = () => {
                                 <span className="footer-award-name">Travelers&apos; Choice</span>
                             </li>
                             <li className="footer-award-item">
-                                <span className="footer-award-medal footer-award-medal--leaf" aria-hidden="true">
+                                <span
+                                    className="footer-award-medal footer-award-medal--leaf"
+                                    aria-hidden="true"
+                                >
                                     <svg viewBox="0 0 24 24" width="20" height="20">
                                         <path
                                             fill="currentColor"
@@ -37,7 +44,10 @@ const FooterComponent = () => {
                                 <span className="footer-award-name">Green Key</span>
                             </li>
                             <li className="footer-award-item">
-                                <span className="footer-award-medal footer-award-medal--crown" aria-hidden="true">
+                                <span
+                                    className="footer-award-medal footer-award-medal--crown"
+                                    aria-hidden="true"
+                                >
                                     <svg viewBox="0 0 24 24" width="20" height="20">
                                         <path
                                             fill="currentColor"
@@ -58,10 +68,7 @@ const FooterComponent = () => {
                             </a>
                         </p>
                         <p className="site-footer-text">
-                            <a
-                                className="site-footer-link"
-                                href="mailto:reservations@lunahotel.my"
-                            >
+                            <a className="site-footer-link" href="mailto:reservations@lunahotel.my">
                                 reservations@lunahotel.my
                             </a>
                         </p>
@@ -75,15 +82,16 @@ const FooterComponent = () => {
                     <div className="site-footer-col site-footer-col--stay">
                         <h4 className="site-footer-heading">Stay information</h4>
                         <p className="site-footer-text">
-                            <strong>Check-in</strong> from 3:00 PM · <strong>Check-out</strong> by 11:00 AM
+                            <strong>Check-in</strong> from 3:00 PM · <strong>Check-out</strong> by
+                            11:00 AM
                         </p>
                         <p className="site-footer-text">
-                            <strong>Quiet hours:</strong> 10:00 PM–7:00 AM (keep noise low on corridors &
-                            balconies).
+                            <strong>Quiet hours:</strong> 10:00 PM–7:00 AM (keep noise low on
+                            corridors & balconies).
                         </p>
                         <p className="site-footer-text">
-                            <strong>Airport transfer:</strong> not included; concierge can arrange a taxi
-                            or car (paid locally).
+                            <strong>Airport transfer:</strong> not included; concierge can arrange a
+                            taxi or car (paid locally).
                         </p>
                         <p className="site-footer-text">
                             <strong>Reception:</strong> 24/7.

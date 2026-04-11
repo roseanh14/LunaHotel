@@ -9,7 +9,7 @@ function RegisterPage() {
         name: '',
         email: '',
         password: '',
-        phoneNumber: ''
+        phoneNumber: '',
     });
 
     const [errorMessage, setErrorMessage] = useState('');
@@ -22,10 +22,8 @@ function RegisterPage() {
 
     const validateForm = () => {
         const { name, email, password, phoneNumber } = formData;
-        if (!name || !email || !password || !phoneNumber) {
-            return false;
-        }
-        return true;
+        return !(!name || !email || !password || !phoneNumber);
+
     };
 
     const handleSubmit = async (e) => {
@@ -36,17 +34,14 @@ function RegisterPage() {
             return;
         }
         try {
-            // Call the register method from ApiService
             const response = await ApiService.registerUser(formData);
 
-            // Check if the response is successful
             if (response.statusCode === 200) {
-                // Clear the form fields after successful registration
                 setFormData({
                     name: '',
                     email: '',
                     password: '',
-                    phoneNumber: ''
+                    phoneNumber: '',
                 });
                 setSuccessMessage('User registered successfully');
                 setTimeout(() => {
@@ -54,8 +49,7 @@ function RegisterPage() {
                     navigate('/');
                 }, 3000);
             }
-        }
-        catch (error) {
+        } catch (error) {
             setErrorMessage(error.response?.data?.message || error.message);
             setTimeout(() => setErrorMessage(''), 5000);
         }
@@ -69,19 +63,43 @@ function RegisterPage() {
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
                     <label>Name:</label>
-                    <input type="text" name="name" value={formData.name} onChange={handleInputChange} required />
+                    <input
+                        type="text"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        required
+                    />
                 </div>
                 <div className="form-group">
                     <label>Email:</label>
-                    <input type="email" name="email" value={formData.email} onChange={handleInputChange} required />
+                    <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        required
+                    />
                 </div>
                 <div className="form-group">
                     <label>Phone Number:</label>
-                    <input type="text" name="phoneNumber" value={formData.phoneNumber} onChange={handleInputChange} required />
+                    <input
+                        type="text"
+                        name="phoneNumber"
+                        value={formData.phoneNumber}
+                        onChange={handleInputChange}
+                        required
+                    />
                 </div>
                 <div className="form-group">
                     <label>Password:</label>
-                    <input type="password" name="password" value={formData.password} onChange={handleInputChange} required />
+                    <input
+                        type="password"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleInputChange}
+                        required
+                    />
                 </div>
                 <button type="submit">Register</button>
             </form>

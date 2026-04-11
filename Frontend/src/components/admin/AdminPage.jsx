@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ApiService from '../../service/ApiService';
 
 const AdminPage = () => {
@@ -7,16 +7,25 @@ const AdminPage = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchAdminName = async () => {
+        async function fetchAdminName() {
             try {
                 const response = await ApiService.getUserProfile();
-                setAdminName(response.user.name);
+                setAdminName(
+                    response &&
+                    response.user &&
+                    typeof response.user.name === 'string'
+                        ? response.user.name
+                        : ''
+                );
             } catch (error) {
-                console.error('Error fetching admin details:', error.message);
+                console.error(
+                    'Error fetching admin details:',
+                    error instanceof Error ? error.message : 'Unknown error'
+                );
             }
-        };
+        }
 
-        fetchAdminName();
+        void fetchAdminName();
     }, []);
 
     return (
@@ -32,6 +41,6 @@ const AdminPage = () => {
             </div>
         </div>
     );
-}
+};
 
 export default AdminPage;
