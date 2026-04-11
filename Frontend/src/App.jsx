@@ -1,121 +1,77 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import Navbar from './components/common/Navbar';
+import FooterComponent from './components/common/Footer';
+import LoginPage from './components/auth/LoginPage';
+import RegisterPage from './components/auth/RegisterPage';
+import HomePage from './components/home/HomePage';
+import AllRoomsPage from './components/booking_rooms/AllRoomsPage';
+import RoomDetailsBookingPage from './components/booking_rooms/RoomDetailsPage';
+import FindBookingPage from './components/booking_rooms/FindBookingPage';
+import AdminPage from './components/admin/AdminPage';
+import ManageRoomPage from './components/admin/ManageRoomPage';
+import EditRoomPage from './components/admin/EditRoomPage';
+import AddRoomPage from './components/admin/AddRoomPage';
+import ManageBookingsPage from './components/admin/ManageBookingsPage';
+import EditBookingPage from './components/admin/EditBookingPage';
+import ProfilePage from './components/profile/ProfilePage';
+import EditProfilePage from './components/profile/EditProfilePage';
+import { ProtectedRoute, AdminRoute } from './service/guard.jsx';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+      <BrowserRouter>
+        <div className="App">
+          <Navbar />
+          <div className="content">
+            <Routes>
+              {/* Public Routes */}
+              <Route exact path="/home" element={<HomePage />} />
+              <Route exact path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/rooms" element={<AllRoomsPage />} />
+              <Route path="/find-booking" element={<FindBookingPage />} />
 
-      <div className="ticks"></div>
+              {/* Protected Routes */}
+              <Route
+                  path="/room-details-book/:roomId"
+                  element={<RoomDetailsBookingPage />}
+              />
+              <Route path="/profile"
+                     element={<ProtectedRoute element={<ProfilePage />} />}
+              />
+              <Route path="/edit-profile"
+                     element={<ProtectedRoute element={<EditProfilePage />} />}
+              />
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+              {/* Admin Routes */}
+              <Route path="/admin"
+                     element={<AdminRoute element={<AdminPage />} />}
+              />
+              <Route path="/admin/manage-rooms"
+                     element={<AdminRoute element={<ManageRoomPage />} />}
+              />
+              <Route path="/admin/edit-room/:roomId"
+                     element={<AdminRoute element={<EditRoomPage />} />}
+              />
+              <Route path="/admin/add-room"
+                     element={<AdminRoute element={<AddRoomPage />} />}
+              />
+              <Route path="/admin/manage-bookings"
+                     element={<AdminRoute element={<ManageBookingsPage />} />}
+              />
+              <Route path="/admin/edit-booking/:bookingCode"
+                     element={<AdminRoute element={<EditBookingPage />} />}
+              />
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+              {/* Fallback Route */}
+              <Route path="*" element={<Navigate to="/login" />} />
+            </Routes>
+          </div>
+          <FooterComponent />
+        </div>
+      </BrowserRouter>
+  );
 }
 
-export default App
+export default App;

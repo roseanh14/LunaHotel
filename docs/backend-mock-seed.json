@@ -1,0 +1,60 @@
+{
+  "description": "Reference seed for Spring Boot / JPA — align field names with your Room entity and image paths under static or CDN.",
+  "rooms": [
+    {
+      "roomType": "Beach Villa",
+      "roomPrice": 749,
+      "roomDescription": "Direct beach access, private terrace, and sunset views over the lagoon. King bed, outdoor rain shower, daily turndown.",
+      "roomPhotoUrl": "/assets/rooms/BeachVilla.png"
+    },
+    {
+      "roomType": "Garden Twin Suite",
+      "roomPrice": 329,
+      "roomDescription": "Two queen beds, sofa corner, extra space. Connecting suites on request — ideal for two couples or friends travelling together.",
+      "roomPhotoUrl": "/assets/rooms/Familyroom.png"
+    },
+    {
+      "roomType": "Honeymoon Suite",
+      "roomPrice": 649,
+      "roomDescription": "Romantic suite with plunge tub, champagne welcome, and ocean-view balcony.",
+      "roomPhotoUrl": "/assets/rooms/HoneymoonSuite.png"
+    },
+    {
+      "roomType": "Junior Suite",
+      "roomPrice": 399,
+      "roomDescription": "Separate sitting area, workspace, and premium linens for longer stays.",
+      "roomPhotoUrl": "/assets/rooms/JuniorSuite.png"
+    },
+    {
+      "roomType": "Overwater Bungalow",
+      "roomPrice": 999,
+      "roomDescription": "Glass floor panels, private deck with sea access, and butler service.",
+      "roomPhotoUrl": "/assets/rooms/OverwaterBungalow.png"
+    },
+    {
+      "roomType": "Penthouse Suite",
+      "roomPrice": 1299,
+      "roomDescription": "Top-floor views, full kitchen, dining for up to eight guests, and media room.",
+      "roomPhotoUrl": "/assets/rooms/PenthouseSuite.png"
+    },
+    {
+      "roomType": "Presidential Suite",
+      "roomPrice": 1899,
+      "roomDescription": "Two bedrooms, private gym access, and 24/7 concierge.",
+      "roomPhotoUrl": "/assets/rooms/PresidentialSuite.png"
+    },
+    {
+      "roomType": "Swim-up Room",
+      "roomPrice": 459,
+      "roomDescription": "Terrace opens into the lagoon-style pool. King bed and poolside cabana.",
+      "roomPhotoUrl": "/assets/rooms/SwimUpRoom.png"
+    },
+    {
+      "roomType": "Terrace Room",
+      "roomPrice": 279,
+      "roomDescription": "Garden or partial sea view from a wide private terrace.",
+      "roomPhotoUrl": "/assets/rooms/TeraseRoom.png"
+    }
+  ],
+  "sampleBookingConfirmationCodes": ["LH-284719", "LH-915302"]
+}
