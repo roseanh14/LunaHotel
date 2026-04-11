@@ -28,7 +28,7 @@ export const MOCK_ROOMS = [
         id: 2,
         roomType: 'Garden Twin Suite',
         roomPrice: 329,
-        roomPhotoUrl: '/assets/rooms/FamilyRoom.png',
+        roomPhotoUrl: '/assets/rooms/GardenTwinSuite.png',
         isBooked: false,
         bookings: [
             {
