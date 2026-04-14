@@ -282,6 +282,57 @@ button.navbar-logout:hover {
     color: var(--luna-turquoise-deep);
 }
 
+.register-link {
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+}
+
+.error-message,
+.success-message {
+    margin: 0 0 0.75rem;
+    padding: 0.65rem 0.85rem;
+    border-radius: 8px;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+.success-message {
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.28);
+    color: #065f46;
+}
+
+.password-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-field input {
+    padding-right: 4.25rem;
+}
+
+button.password-toggle {
+    width: auto;
+    padding: 6px 10px;
+    min-height: 32px;
+    border-radius: 8px;
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.85rem;
+    font-weight: 700;
+    background: var(--luna-navbar-bg);
+    color: var(--luna-turquoise-deep);
+    border: 1px solid rgba(15, 118, 110, 0.22);
+    box-shadow: none;
+}
+
+button.password-toggle:hover {
+    background: #f0fdfa;
+}
+
 .form-group {
     margin-bottom: 15px;
 }
@@ -1070,9 +1121,9 @@ a.room-list-cta-link {
 
 .room-details-booking {
     padding: 1rem clamp(1rem, 3vw, 1.75rem) 1.85rem;
-    max-width: none;
     width: 100%;
-    margin: 0;
+    max-width: 980px;
+    margin: 0 auto;
     box-sizing: border-box;
     background: var(--luna-page-bg);
     border: 1px solid var(--luna-border-teal-strong);
@@ -1108,6 +1159,203 @@ a.room-list-cta-link {
 
 .room-details-info {
     max-width: 100%;
+}
+
+.booking-info {
+    margin-top: 1.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.9rem;
+}
+
+.booking-alerts {
+    flex: 1 1 100%;
+}
+
+.date-picker-container {
+    width: min(720px, 100%);
+    flex: 1 1 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(12rem, 1fr));
+    gap: 0.75rem 0.9rem;
+    padding: 0.85rem 1rem;
+    margin: 0 auto;
+    border: 1px solid rgba(15, 118, 110, 0.22);
+    border-radius: var(--luna-radius);
+    background: #f0fdfa;
+    box-sizing: border-box;
+}
+
+.date-picker-container .react-datepicker-wrapper,
+.date-picker-container .react-datepicker__input-container {
+    width: 100%;
+    display: block;
+}
+
+.react-datepicker-popper,
+.luna-datepicker-popper {
+    z-index: 4000 !important;
+}
+
+/* React DatePicker (Room details) — force compact popup */
+.luna-datepicker.react-datepicker {
+    font-size: 0.82rem !important;
+    border-radius: 10px !important;
+}
+
+.luna-datepicker .react-datepicker__header {
+    padding-top: 0.45rem !important;
+}
+
+.luna-datepicker .react-datepicker__current-month,
+.luna-datepicker .react-datepicker-time__header,
+.luna-datepicker .react-datepicker-year-header {
+    font-size: 0.88rem !important;
+}
+
+.luna-datepicker .react-datepicker__day-name,
+.luna-datepicker .react-datepicker__day,
+.luna-datepicker .react-datepicker__time-name {
+    width: 1.85rem !important;
+    line-height: 1.85rem !important;
+    margin: 0.1rem !important;
+    font-size: 0.82rem !important;
+}
+
+.luna-datepicker .react-datepicker__navigation {
+    top: 0.5rem !important;
+}
+
+.luna-datepicker .react-datepicker__month-container {
+    width: 16.5rem !important;
+}
+
+.luna-datepicker .react-datepicker__triangle {
+    display: none !important;
+}
+
+.luna-datepicker .react-datepicker__day--keyboard-selected,
+.luna-datepicker .react-datepicker__day--selected {
+    border-radius: 8px !important;
+}
+
+.detail-search-field {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(15, 118, 110, 0.28);
+    background: #fff;
+}
+
+.guest-container {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 0.75rem 1rem;
+}
+
+.guest-div {
+    display: grid;
+    gap: 0.35rem;
+    min-width: 8.5rem;
+}
+
+.guest-div label {
+    font-weight: 700;
+    color: #334155;
+}
+
+.guest-div input {
+    width: 7rem;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(15, 118, 110, 0.28);
+    background: #fff;
+}
+
+.confirm-booking {
+    width: auto;
+    min-width: 12rem;
+    min-height: 44px;
+    padding: 12px 16px;
+}
+
+.total-price {
+    width: min(720px, 100%);
+    flex: 1 1 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem 1rem;
+    margin-top: 0.35rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0.85rem 1rem;
+    border: 1px solid rgba(15, 118, 110, 0.22);
+    border-radius: var(--luna-radius);
+    background: #f8fafc;
+    box-sizing: border-box;
+}
+
+.total-price p {
+    margin: 0;
+    font-weight: 700;
+    color: #334155;
+}
+
+.accept-booking {
+    width: auto;
+    min-width: 12rem;
+    min-height: 44px;
+    padding: 12px 16px;
+}
+
+button.go-back-button {
+    cursor: pointer;
+    border: 2px solid var(--luna-turquoise);
+    background: var(--luna-page-bg);
+    color: var(--luna-turquoise-deep);
+    width: auto;
+    padding: 10px 16px;
+    border-radius: var(--luna-radius);
+    font-weight: 600;
+    min-height: 44px;
+    transition: background-color 0.2s ease;
+}
+
+button.go-back-button:hover {
+    background: #f0fdfa;
+}
+
+@media (max-width: 640px) {
+    .booking-info {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .booking-info .book-now-button,
+    .booking-info .go-back-button {
+        width: 100%;
+    }
+
+    .date-picker-container {
+        grid-template-columns: 1fr;
+    }
+
+    .guest-div input {
+        width: 100%;
+    }
+
+    .confirm-booking,
+    .accept-booking {
+        width: 100%;
+        min-width: 0;
+    }
 }
 
 .room-details-info h3 {
@@ -1171,6 +1419,42 @@ a.room-list-cta-link {
 .room-detail-loading {
     padding: 2rem var(--luna-content-gutter);
     color: #64748b;
+}
+
+.room-availability {
+    margin: 0;
+    padding: 0.45rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    line-height: 1.2;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.room-availability--checking {
+    background: rgba(15, 118, 110, 0.08);
+    color: var(--luna-turquoise-deep);
+    border: 1px solid rgba(15, 118, 110, 0.2);
+}
+
+.room-availability--available {
+    background: rgba(16, 185, 129, 0.12);
+    color: #065f46;
+    border: 1px solid rgba(16, 185, 129, 0.28);
+}
+
+.room-availability--unavailable {
+    background: rgba(239, 68, 68, 0.1);
+    color: #991b1b;
+    border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.room-availability--error {
+    background: rgba(148, 163, 184, 0.22);
+    color: #334155;
+    border: 1px solid rgba(148, 163, 184, 0.35);
 }
 
 .room-booking-login-prompt {
@@ -1280,6 +1564,108 @@ a.room-booking-login-link.go-back-button {
     color: var(--luna-turquoise-deep);
     border: 2px solid var(--luna-turquoise);
     background: var(--luna-page-bg);
+}
+
+/* PROFILE */
+.profile-page,
+.edit-profile-page {
+    width: 100%;
+    box-sizing: border-box;
+    max-width: none;
+    margin: 1.25rem 0 2.5rem;
+    padding: 0 var(--luna-content-gutter);
+    text-align: left;
+}
+
+.edit-profile-page h2 {
+    margin: 0 0 0.6rem;
+}
+
+.edit-profile-page .profile-details {
+    margin-top: 0.25rem;
+}
+
+.profile-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    margin: 0.85rem 0 1.25rem;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.profile-actions button {
+    width: auto;
+}
+
+.edit-profile-button {
+    cursor: pointer;
+    border: 2px solid var(--luna-turquoise);
+    background: var(--luna-page-bg);
+    color: var(--luna-turquoise-deep);
+    padding: 8px 14px;
+    border-radius: var(--luna-radius);
+    font-weight: 700;
+    min-height: 40px;
+}
+
+.edit-profile-button:hover {
+    background: #f0fdfa;
+}
+
+.profile-details {
+    padding: 1rem 1.25rem;
+    border: 1px solid rgba(15, 118, 110, 0.22);
+    border-radius: var(--luna-radius);
+    background: var(--luna-page-bg);
+    box-shadow: var(--luna-shadow-card);
+}
+
+.profile-details + .bookings-section {
+    margin-top: 1.15rem;
+}
+
+.profile-edit-field {
+    display: grid;
+    gap: 0.35rem;
+    margin-top: 0.85rem;
+}
+
+.profile-edit-label {
+    font-size: 0.9rem;
+    color: #334155;
+    font-weight: 600;
+}
+
+.profile-edit-field input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(15, 118, 110, 0.28);
+    background: #fff;
+}
+
+.delete-profile-button {
+    cursor: pointer;
+    border: 2px solid rgba(239, 68, 68, 0.65);
+    background: rgba(239, 68, 68, 0.08);
+    color: #991b1b;
+    padding: 10px 16px;
+    border-radius: var(--luna-radius);
+    font-weight: 700;
+    min-height: 44px;
+}
+
+.delete-profile-button:hover {
+    background: rgba(239, 68, 68, 0.12);
+}
+
+@media (max-width: 760px) {
+    .profile-page,
+    .edit-profile-page {
+        padding: 0 1rem;
+    }
 }
 
 /* SERVICES — same light turquoise band as navbar / room search */

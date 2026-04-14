@@ -97,7 +97,11 @@ const RoomSearch = ({ handleSearchResult, onSearchSuccess }) => {
                 }
 
                 if (typeof onSearchSuccess === 'function') {
-                    onSearchSuccess();
+                    onSearchSuccess({
+                        checkInDate: formattedStartDate,
+                        checkOutDate: formattedEndDate,
+                        roomType,
+                    });
                 }
 
                 if (typeof handleSearchResult === 'function') {

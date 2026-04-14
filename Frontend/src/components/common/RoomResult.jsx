@@ -2,13 +2,15 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import ApiService from '../../service/ApiService.js';
 
-const RoomResult = ({ roomSearchResults, afterAvailabilitySearch = false }) => {
+const RoomResult = ({ roomSearchResults, afterAvailabilitySearch = false, searchCriteria = null }) => {
     const navigate = useNavigate();
     const isAdmin = ApiService.isAdmin();
     const showGuestPII = isAdmin;
 
     const goToRoomDetail = (roomId) => {
-        navigate(`/room-details-book/${roomId}`);
+        navigate(`/room-details-book/${roomId}`, {
+            state: searchCriteria || null,
+        });
     };
 
     const ariaLabelForCard = (room) =>

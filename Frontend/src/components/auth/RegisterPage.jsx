@@ -14,6 +14,7 @@ function RegisterPage() {
 
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -57,8 +58,16 @@ function RegisterPage() {
 
     return (
         <div className="auth-container">
-            {errorMessage && <p className="error-message">{errorMessage}</p>}
-            {successMessage && <p className="success-message">{successMessage}</p>}
+            {errorMessage && (
+                <p className="error-message" role="alert">
+                    {errorMessage}
+                </p>
+            )}
+            {successMessage && (
+                <p className="success-message" role="status" aria-live="polite">
+                    {successMessage}
+                </p>
+            )}
             <h2>Sign Up</h2>
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
@@ -93,13 +102,23 @@ function RegisterPage() {
                 </div>
                 <div className="form-group">
                     <label>Password:</label>
-                    <input
-                        type="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleInputChange}
-                        required
-                    />
+                    <div className="password-field">
+                        <input
+                            type={showPassword ? 'text' : 'password'}
+                            name="password"
+                            value={formData.password}
+                            onChange={handleInputChange}
+                            required
+                        />
+                        <button
+                            type="button"
+                            className="password-toggle"
+                            aria-label={showPassword ? 'Hide password' : 'Show password'}
+                            onClick={() => setShowPassword((prev) => !prev)}
+                        >
+                            {showPassword ? 'Hide' : 'Show'}
+                        </button>
+                    </div>
                 </div>
                 <button type="submit">Register</button>
             </form>

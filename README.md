@@ -1,6 +1,6 @@
 # Luna Hotel – Reservation System
 
-Portfolio **full-stack** project: **Spring Boot** REST API, **React (Vite)** SPA, **MySQL**, **JWT** auth, **OpenAPI 3 / Swagger UI**, and **Redis** caching for room reads.
+Portfolio **full-stack** project: **Spring Boot** REST API, **React (Vite)** SPA, **MySQL**, **JWT** auth, **OpenAPI 3 / Swagger UI**, and **Redis** caching for read-heavy endpoints (optional).
 
 ---
 
@@ -56,7 +56,11 @@ Root **`Luna ER diagram.png`** — entity-relationship diagram for the data mode
 ### Frontend
 - **Pages / feature folders** under `src/components/` (`auth`, `booking_rooms`, `admin`, `home`, `profile`, `common`)
 - **Shared services** — `ApiService.js`, route guards
-- **Reusable components** — e.g. `Pagination`, `RoomSearch`, `RoomResult` (used in multiple screens with different props)
+- **Reusable components** — e.g. `RoomSearch`, `RoomResult`, `Pagination`
+
+Reusable component example (required by the assignment):
+
+- **`RoomSearch`** is used on **`HomePage`** (homepage search) and **`AllRoomsPage`** (filter/search in the room list) with different props/state usage.
 
 ---
 
@@ -94,13 +98,15 @@ Relationships: one user → many bookings; one room → many bookings.
 - **Swagger UI:** `http://localhost:4040/swagger-ui.html` (may redirect to `/swagger-ui/index.html`)
 - **OpenAPI JSON:** `http://localhost:4040/v3/api-docs`
 - Public: `/auth/**`. For other endpoints, use **Authorize** in Swagger with `Bearer <token>` from login.
+- How to export OpenAPI to a file: see `docs/API.md`.
 
 ### Redis caching (Spring Cache)
 
 - **Cached:** read-heavy **room** operations in `RoomService` (all rooms, by id, room types, availability queries).
 - **Evicted** when rooms or bookings change (`RoomService` mutations, `BookingService` save/cancel).
 - **TTL:** 10 minutes (`CacheRedisConfig`).
-- **Requirement:** Redis on **`localhost:6379`** when running the full stack (see below).
+- **Default:** in-memory cache (no Redis required).
+- **Enable Redis:** run backend with `--spring.profiles.active=redis` (expects Redis on **`localhost:6379`**).
 
 ---
 
@@ -110,7 +116,7 @@ Relationships: one user → many bookings; one room → many bookings.
 - **JDK 17**
 - **Node.js** (LTS recommended) + npm
 - **MySQL** — create DB and user as in `Backend/src/main/resources/application.properties`
-- **Redis** — for backend with cache enabled (or use Docker Compose in `Backend/`)
+- **Redis** (optional) — only if you enable Redis cache (or use Docker Compose in `Backend/`)
 
 ### 1. MySQL
 Adjust `Backend/src/main/resources/application.properties` (`spring.datasource.*`) to match your instance.
@@ -153,7 +159,13 @@ Point the frontend API base URL to your backend (e.g. via `.env` / `ApiService.j
 
 ### Tests (backend)
 
-Integration tests use Spring profile **`test`** (`application-test.properties`): Redis auto-config is **disabled** and cache type **`none`**, so **MySQL** (or your test DB setup) is still required for `@SpringBootTest` that hits the database.
+The test suite contains:
+
+- **Unit tests (non-trivial logic/algorithm)**: `BookingServiceTest` (room availability overlap checks)
+- **Controller tests (MockMvc)**: `BookingControllerTest`
+- **Integration test (service layer collaboration, real data layer)**: `ServiceLayerSpringIntegrationTest` (`@SpringBootTest` + Spring profile `test`)
+
+Integration tests use Spring profile **`test`** (`Backend/src/test/resources/application-test.properties`) and run on **H2 in-memory DB**, with Redis auto-config disabled. **No MySQL/Redis is required to run tests.**
 
 ```bash
 cd Backend
@@ -172,9 +184,18 @@ cd Backend
 
 This repository is provided as a **portfolio / showcase** project. Add a license file if you want to clarify reuse terms.
 
-## Formating code
+## Formatting
+
+Backend (Windows PowerShell):
+
+```powershell
 cd Backend
 .\mvnw.cmd io.spring.javaformat:spring-javaformat-maven-plugin:0.0.43:apply
+```
 
+Frontend:
+
+```bash
 cd Frontend
 npm run format
+```

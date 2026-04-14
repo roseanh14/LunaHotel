@@ -6,14 +6,21 @@ const FindBookingPage = () => {
     const [bookingDetails, setBookingDetails] = useState(null);
     const [error, setError] = useState(null);
 
+    const normalizeConfirmationCode = (value) => {
+        if (typeof value !== 'string') return '';
+        // Keep hyphens (mock codes can be like "LH-123456"), but remove trailing punctuation/spaces.
+        return value.trim().toUpperCase().replace(/[\s.,;:]+$/g, '');
+    };
+
     const handleSearch = async () => {
-        if (!confirmationCode.trim()) {
+        const normalizedCode = normalizeConfirmationCode(confirmationCode);
+        if (!normalizedCode) {
             setError('Please Enter a booking confirmation code');
             setTimeout(() => setError(''), 5000);
             return;
         }
         try {
-            const response = await ApiService.getBookingByConfirmationCode(confirmationCode);
+            const response = await ApiService.getBookingByConfirmationCode(normalizedCode);
             setBookingDetails(response.booking);
             setError(null);
         } catch (error) {

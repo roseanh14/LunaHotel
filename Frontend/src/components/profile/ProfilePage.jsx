@@ -37,11 +37,6 @@ const ProfilePage = () => {
         void fetchUserProfile();
     }, []);
 
-    const handleLogout = () => {
-        ApiService.logout();
-        navigate('/home');
-    };
-
     const handleEditProfile = () => {
         navigate('/edit-profile');
     };
@@ -55,9 +50,6 @@ const ProfilePage = () => {
             <div className="profile-actions">
                 <button className="edit-profile-button" onClick={handleEditProfile}>
                     Edit Profile
-                </button>
-                <button className="logout-button" onClick={handleLogout}>
-                    Logout
                 </button>
             </div>
 
@@ -81,6 +73,10 @@ const ProfilePage = () => {
                     {bookings.length > 0 ? (
                         bookings.map((booking) => (
                             <div key={booking.id} className="booking-item">
+                                <p>
+                                    <strong>Booked by:</strong>{' '}
+                                    {booking.user && booking.user.name ? booking.user.name : ''}
+                                </p>
                                 <p>
                                     <strong>Booking Code:</strong> {booking.bookingConfirmationCode}
                                 </p>

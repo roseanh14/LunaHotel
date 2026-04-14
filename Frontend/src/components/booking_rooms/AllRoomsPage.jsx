@@ -10,6 +10,7 @@ const AllRoomsPage = () => {
     const [selectedRoomType, setSelectedRoomType] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [afterAvailabilitySearch, setAfterAvailabilitySearch] = useState(false);
+    const [lastSearchCriteria, setLastSearchCriteria] = useState(null);
 
     const roomsPerPage = 5;
 
@@ -93,12 +94,16 @@ const AllRoomsPage = () => {
 
             <RoomSearch
                 handleSearchResult={handleSearchResult}
-                onSearchSuccess={() => setAfterAvailabilitySearch(true)}
+                onSearchSuccess={(criteria) => {
+                    setAfterAvailabilitySearch(true);
+                    setLastSearchCriteria(criteria || null);
+                }}
             />
 
             <RoomResult
                 roomSearchResults={currentRooms}
                 afterAvailabilitySearch={afterAvailabilitySearch}
+                searchCriteria={lastSearchCriteria}
             />
 
             <Pagination

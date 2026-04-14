@@ -58,6 +58,46 @@ export async function mockGetUserProfile() {
     };
 }
 
+export async function mockGetUserBookings(userId) {
+    await mockDelay(120);
+
+    void userId;
+
+    const profile = await mockGetUserProfile();
+    return {
+        statusCode: 200,
+        message: 'successful',
+        user: {
+            ...profile.user,
+            bookings: [],
+        },
+    };
+}
+
+export async function mockUpdateMyProfile(profileUpdates) {
+    await mockDelay(150);
+
+    const current = await mockGetUserProfile();
+    const nextUser = {
+        ...current.user,
+        ...(profileUpdates && typeof profileUpdates === 'object' ? profileUpdates : {}),
+    };
+
+    return {
+        statusCode: 200,
+        user: nextUser,
+        message: 'successful',
+    };
+}
+
+export async function mockDeleteMyAccount() {
+    await mockDelay(150);
+    return {
+        statusCode: 200,
+        message: 'successful',
+    };
+}
+
 export async function mockBookRoom(roomId, userId, booking) {
     await mockDelay(250);
 

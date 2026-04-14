@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
 import ApiService from '../../service/ApiService';
 import RoomFeatureIconStrip from '../common/RoomFeatureIconStrip.jsx';
@@ -23,6 +23,9 @@ const RoomDetailsPage = () => {
     const [showMessage, setShowMessage] = useState(false);
     const [confirmationCode, setConfirmationCode] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [availabilityStatus, setAvailabilityStatus] = useState('idle'); // idle | checking | available | unavailable | error
+    const [availabilityNote, setAvailabilityNote] = useState('');
+    const bookingAlertRef = useRef(null);
 
     const getErrorMessage = (errorValue, fallbackMessage) => {
         if (
@@ -118,6 +121,97 @@ const RoomDetailsPage = () => {
         };
     }, [roomId]);
 
+    useEffect(() => {
+        const state = location && location.state ? location.state : null;
+        if (!state || typeof state !== 'object') {
+            return;
+        }
+
+        const parseStateDate = (value) => {
+            if (!value) return null;
+            if (value instanceof Date) return value;
+            if (typeof value === 'string') {
+                const parsed = new Date(value);
+                return Number.isNaN(parsed.getTime()) ? null : parsed;
+            }
+            return null;
+        };
+
+        const checkInFromState = parseStateDate(state.checkInDate);
+        const checkOutFromState = parseStateDate(state.checkOutDate);
+
+        if (checkInFromState) {
+            setCheckInDate(checkInFromState);
+        }
+        if (checkOutFromState) {
+            setCheckOutDate(checkOutFromState);
+        }
+
+        if (checkInFromState && checkOutFromState) {
+            setShowDatePicker(true);
+        }
+    }, [location]);
+
+    useEffect(() => {
+        const safeCheckInDate = checkInDate instanceof Date ? checkInDate : null;
+        const safeCheckOutDate = checkOutDate instanceof Date ? checkOutDate : null;
+
+        const roomTypeForSearch =
+            roomDetails && typeof roomDetails.roomType === 'string' ? roomDetails.roomType : null;
+
+        if (!safeCheckInDate || !safeCheckOutDate || !roomTypeForSearch) {
+            setAvailabilityStatus('idle');
+            setAvailabilityNote('');
+            return;
+        }
+
+        const sameRoomId = (candidateId) => {
+            if (candidateId == null) return false;
+            return String(candidateId) === String(roomId);
+        };
+
+        let cancelled = false;
+        async function checkAvailability() {
+            try {
+                setAvailabilityStatus('checking');
+                setAvailabilityNote('Checking availability for your dates…');
+
+                const response = await ApiService.getAvailableRoomsByDateAndType(
+                    formatDateForApi(safeCheckInDate),
+                    formatDateForApi(safeCheckOutDate),
+                    roomTypeForSearch
+                );
+
+                const list = response && Array.isArray(response.roomList) ? response.roomList : [];
+                const isAvailable = list.some((r) => r && sameRoomId(r.id));
+
+                if (cancelled) return;
+                if (isAvailable) {
+                    setAvailabilityStatus('available');
+                    setAvailabilityNote('Available for your selected dates.');
+                } else {
+                    setAvailabilityStatus('unavailable');
+                    setAvailabilityNote('Not available for your selected dates. Try different dates.');
+                }
+            } catch {
+                if (cancelled) return;
+                setAvailabilityStatus('error');
+                setAvailabilityNote('Availability could not be checked right now.');
+            }
+        }
+
+        void checkAvailability();
+        return () => {
+            cancelled = true;
+        };
+    }, [checkInDate, checkOutDate, roomDetails, roomId]);
+
+    useEffect(() => {
+        if (!bookingAlertRef.current) return;
+        if (!errorMessage && !showMessage) return;
+        bookingAlertRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, [errorMessage, showMessage]);
+
     const handleConfirmBooking = async () => {
         const safeCheckInDate = checkInDate instanceof Date ? checkInDate : null;
         const safeCheckOutDate = checkOutDate instanceof Date ? checkOutDate : null;
@@ -136,6 +230,12 @@ const RoomDetailsPage = () => {
 
         if (!roomDetails || typeof roomDetails.roomPrice !== 'number') {
             setErrorMessage('Room price is unavailable.');
+            setTimeout(() => setErrorMessage(''), 5000);
+            return;
+        }
+
+        if (availabilityStatus === 'unavailable') {
+            setErrorMessage('This room is not available for those dates.');
             setTimeout(() => setErrorMessage(''), 5000);
             return;
         }
@@ -172,6 +272,12 @@ const RoomDetailsPage = () => {
 
         if (!safeCheckInDate || !safeCheckOutDate) {
             setErrorMessage('Please select check-in and check-out dates.');
+            setTimeout(() => setErrorMessage(''), 5000);
+            return;
+        }
+
+        if (availabilityStatus === 'unavailable') {
+            setErrorMessage('This room is not available for those dates.');
             setTimeout(() => setErrorMessage(''), 5000);
             return;
         }
@@ -291,14 +397,7 @@ const RoomDetailsPage = () => {
 
             <div className="room-details-surface">
                 <div className="room-details-booking">
-            {showMessage && (
-                <p className="booking-success-message">
-                    Booking successful! Confirmation code: {confirmationCode}. An SMS and email of
-                    your booking details have been sent to you.
-                </p>
-            )}
-
-            {errorMessage && <p className="error-message">{errorMessage}</p>}
+            {/* booking alerts are rendered near booking controls (below) */}
 
             <h2 className="room-details-booking-title">
                 Room <span className="luna-color">Details</span>
@@ -364,10 +463,37 @@ const RoomDetailsPage = () => {
                         Go Back
                     </button>
 
+                    {availabilityNote ? (
+                        <p
+                            className={`room-availability room-availability--${availabilityStatus}`}
+                            aria-live="polite"
+                        >
+                            {availabilityNote}
+                        </p>
+                    ) : null}
+
+                    {(showMessage || errorMessage) && (
+                        <div className="booking-alerts" ref={bookingAlertRef}>
+                            {showMessage ? (
+                                <p className="success-message" role="status" aria-live="polite">
+                                    Booking successful! Confirmation code:{' '}
+                                    <span className="booking-confirmation-code">{confirmationCode}</span>
+                                </p>
+                            ) : null}
+                            {errorMessage ? (
+                                <p className="error-message" role="alert">
+                                    {errorMessage}
+                                </p>
+                            ) : null}
+                        </div>
+                    )}
+
                     {showDatePicker && (
                         <div className="date-picker-container">
                             <DatePicker
                                 className="detail-search-field"
+                                calendarClassName="luna-datepicker"
+                                popperClassName="luna-datepicker-popper"
                                 selected={selectedCheckInDate}
                                 onChange={(date) => {
                                     const normalizedDate = normalizePickerDate(date);
@@ -379,10 +505,13 @@ const RoomDetailsPage = () => {
                                 placeholderText="Check-in Date"
                                 dateFormat="dd/MM/yyyy"
                                 showMonthYearDropdown
+                                popperPlacement="bottom-start"
                             />
 
                             <DatePicker
                                 className="detail-search-field"
+                                calendarClassName="luna-datepicker"
+                                popperClassName="luna-datepicker-popper"
                                 selected={selectedCheckOutDate}
                                 onChange={(date) => {
                                     const normalizedDate = normalizePickerDate(date);
@@ -395,6 +524,7 @@ const RoomDetailsPage = () => {
                                 placeholderText="Check-out Date"
                                 dateFormat="dd/MM/yyyy"
                                 showMonthYearDropdown
+                                popperPlacement="bottom-start"
                             />
 
                             <div className="guest-container">

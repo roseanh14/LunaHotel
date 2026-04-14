@@ -35,11 +35,36 @@ export default class ApiService {
     }
 
     static async getUserProfile() {
-        if (this.useMock()) {
+        // In mock mode, only use mock profile when not authenticated (demo browsing).
+        // If a JWT exists, prefer the real backend profile so UI shows the logged-in user.
+        if (this.useMock() && !this.isAuthenticated()) {
             return mockApi.mockGetUserProfile();
         }
 
         const response = await axios.get(`${this.BASE_URL}/users/get-logged-in-profile-info`, {
+            headers: this.getHeader(),
+        });
+        return response.data;
+    }
+
+    static async updateMyProfile(profileUpdates) {
+        if (this.useMock() && !this.isAuthenticated()) {
+            // In mock mode we just echo updated fields in local "profile"
+            return mockApi.mockUpdateMyProfile(profileUpdates);
+        }
+
+        const response = await axios.put(`${this.BASE_URL}/users/update-my-profile`, profileUpdates, {
+            headers: this.getHeader(),
+        });
+        return response.data;
+    }
+
+    static async deleteMyAccount() {
+        if (this.useMock() && !this.isAuthenticated()) {
+            return mockApi.mockDeleteMyAccount();
+        }
+
+        const response = await axios.delete(`${this.BASE_URL}/users/delete-my-account`, {
             headers: this.getHeader(),
         });
         return response.data;
@@ -53,6 +78,10 @@ export default class ApiService {
     }
 
     static async getUserBookings(userId) {
+        if (this.useMock()) {
+            return mockApi.mockGetUserBookings(userId);
+        }
+
         const response = await axios.get(`${this.BASE_URL}/users/get-user-bookings/${userId}`, {
             headers: this.getHeader(),
         });
