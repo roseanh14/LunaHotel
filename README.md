@@ -199,3 +199,8 @@ Frontend:
 cd Frontend
 npm run format
 ```
+
+cd Backend
+.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=redis"
+
+Test-NetConnection 127.0.0.1 -Port 6380

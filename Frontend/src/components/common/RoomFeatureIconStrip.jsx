@@ -24,9 +24,7 @@ function Svg({ children, className }) {
     );
 }
 
-/** Reusable strokes — teal via CSS currentColor */
 const Icons = {
-    /** Side-view bed: headboard + mattress + pillow (wider = king). */
     bedKing: (
         <Svg>
             <path d="M3.5 7v10.5M3.5 17.5h16M3.5 12.5h16v5H3.5v-5z" />
@@ -39,7 +37,6 @@ const Icons = {
             <path d="M5.5 10h7.5v2.5h-7.5z" />
         </Svg>
     ),
-    /** Pipe, round shower head, streams + drops (rain shower). */
     shower: (
         <Svg>
             <path d="M12 2.5v3.75" />
@@ -53,7 +50,6 @@ const Icons = {
             <path d="M4 12h16v4a3 3 0 01-3 3H7a3 3 0 01-3-3v-4zM6 12V9a3 3 0 013-3h1M10 6V5M14 6V5" />
         </Svg>
     ),
-    /** Balcony / furnished terrace (no water line). */
     terrace: (
         <Svg>
             <path d="M2.5 18.5h19" />
@@ -137,7 +133,6 @@ const Icons = {
             <path d="M4 4h16v16H4zM4 12h16M12 4v16M8 8h.01M16 16h.01" />
         </Svg>
     ),
-    /** Plank deck, railing, sea waves. */
     deck: (
         <Svg>
             <path d="M1.5 19.5c2.2-1.2 4.6-1.2 6.8 0s4.6-1.2 6.8 0 4.6-1.2 6.8 0 4.6-1.2 6.8 0" />
@@ -250,9 +245,6 @@ const ROOM_FEATURE_ICON_MAP = {
 
 const DEFAULT_KEYS = ['kingBed', 'outdoorShower', 'seaDeck', 'coffee', 'tv'];
 
-/**
- * @param {{ iconKeys?: string[] }} props
- */
 export default function RoomFeatureIconStrip({ iconKeys }) {
     const keys =
         Array.isArray(iconKeys) && iconKeys.length > 0 ? iconKeys.slice(0, 5) : DEFAULT_KEYS;

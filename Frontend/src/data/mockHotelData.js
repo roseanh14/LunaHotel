@@ -242,7 +242,6 @@ export const MOCK_ROOMS = [
     },
 ];
 
-/** Room detail screen expects `description` in destructuring — keep in sync */
 export function toRoomApiShape(room) {
     return {
         ...room,
@@ -265,15 +264,10 @@ export function getMockRoomById(roomId) {
     return { room: toRoomApiShape({ ...room }) };
 }
 
-/** YYYY-MM-DD intervals [checkIn, checkOut) — overlap if another stay blocks the requested nights */
 function mockStayRangesOverlap(searchIn, searchOut, bookIn, bookOut) {
     return bookIn < searchOut && bookOut > searchIn;
 }
 
-/**
- * Rooms of this type for availability search: always returns every room of the type.
- * `isBooked` is true if the requested dates overlap a mock reservation, or the room is permanently closed (isBooked with no bookings).
- */
 export function getMockAvailableByDateAndType(checkInDate, checkOutDate, roomType) {
     const list = MOCK_ROOMS.filter((r) => r.roomType === roomType).map((r) => {
         const bookings = (r.bookings || []).map((b) => ({ ...b }));

@@ -65,7 +65,6 @@ function Navbar() {
                         Find my Booking
                     </NavLink>
                 </li>
-
                 {isUser && (
                     <li>
                         <NavLink to="/profile" className={navLinkClass} onClick={closeMenu}>

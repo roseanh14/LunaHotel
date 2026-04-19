@@ -20,11 +20,13 @@ const RoomDetailsPage = () => {
     const [totalGuests, setTotalGuests] = useState(1);
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [userId, setUserId] = useState('');
+    const [bookerContact, setBookerContact] = useState(null);
     const [showMessage, setShowMessage] = useState(false);
     const [confirmationCode, setConfirmationCode] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    const [availabilityStatus, setAvailabilityStatus] = useState('idle'); // idle | checking | available | unavailable | error
+    const [availabilityStatus, setAvailabilityStatus] = useState('idle');
     const [availabilityNote, setAvailabilityNote] = useState('');
+    const [availabilityRevision, setAvailabilityRevision] = useState(0);
     const bookingAlertRef = useRef(null);
 
     const getErrorMessage = (errorValue, fallbackMessage) => {
@@ -92,16 +94,25 @@ const RoomDetailsPage = () => {
                             userProfile.user.id != null
                         ) {
                             setUserId(String(userProfile.user.id));
+                            const u = userProfile.user;
+                            setBookerContact({
+                                name: typeof u.name === 'string' ? u.name : '',
+                                email: typeof u.email === 'string' ? u.email : '',
+                                phoneNumber: typeof u.phoneNumber === 'string' ? u.phoneNumber : '',
+                            });
                         } else if (!cancelled) {
                             setUserId('');
+                            setBookerContact(null);
                         }
                     } catch {
                         if (!cancelled) {
                             setUserId('');
+                            setBookerContact(null);
                         }
                     }
                 } else if (!cancelled) {
                     setUserId('');
+                    setBookerContact(null);
                 }
             } catch (errorValue) {
                 if (!cancelled) {
@@ -183,7 +194,9 @@ const RoomDetailsPage = () => {
                 );
 
                 const list = response && Array.isArray(response.roomList) ? response.roomList : [];
-                const isAvailable = list.some((r) => r && sameRoomId(r.id));
+                const match = list.find((r) => r && sameRoomId(r.id));
+                const blocked = Boolean(match && match.isBooked === true);
+                const isAvailable = Boolean(match) && !blocked;
 
                 if (cancelled) return;
                 if (isAvailable) {
@@ -191,7 +204,11 @@ const RoomDetailsPage = () => {
                     setAvailabilityNote('Available for your selected dates.');
                 } else {
                     setAvailabilityStatus('unavailable');
-                    setAvailabilityNote('Not available for your selected dates. Try different dates.');
+                    setAvailabilityNote(
+                        match
+                            ? 'Not available for your selected dates. Try different dates.'
+                            : 'This room is not available for the selected dates.'
+                    );
                 }
             } catch {
                 if (cancelled) return;
@@ -204,13 +221,24 @@ const RoomDetailsPage = () => {
         return () => {
             cancelled = true;
         };
-    }, [checkInDate, checkOutDate, roomDetails, roomId]);
+    }, [checkInDate, checkOutDate, roomDetails, roomId, availabilityRevision]);
 
     useEffect(() => {
         if (!bookingAlertRef.current) return;
         if (!errorMessage && !showMessage) return;
         bookingAlertRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, [errorMessage, showMessage]);
+
+    const handleBookingGoBack = () => {
+        if (showDatePicker) {
+            setShowDatePicker(false);
+            setTotalPrice(0);
+            setTotalGuests(1);
+            setErrorMessage('');
+            return;
+        }
+        navigate(-1);
+    };
 
     const handleConfirmBooking = async () => {
         const safeCheckInDate = checkInDate instanceof Date ? checkInDate : null;
@@ -241,10 +269,10 @@ const RoomDetailsPage = () => {
         }
 
         const oneDay = 24 * 60 * 60 * 1000;
-        const totalDays =
-            Math.round(
-                Math.abs((safeCheckOutDate.getTime() - safeCheckInDate.getTime()) / oneDay)
-            ) + 1;
+        const totalDays = Math.max(
+            1,
+            Math.round((safeCheckOutDate.getTime() - safeCheckInDate.getTime()) / oneDay)
+        );
 
         const calculatedTotalGuests = numAdults;
         const roomPricePerNight = roomDetails.roomPrice;
@@ -289,15 +317,27 @@ const RoomDetailsPage = () => {
                 numOfAdults: numAdults,
             };
 
-            const response = await ApiService.bookRoom(roomId, userId, booking);
+            const response = await ApiService.bookRoom(roomId, userId, booking, bookerContact || undefined);
 
             if (response && response.statusCode === 200) {
+                setErrorMessage('');
                 setConfirmationCode(
                     typeof response.bookingConfirmationCode === 'string'
                         ? response.bookingConfirmationCode
                         : ''
                 );
                 setShowMessage(true);
+                setAvailabilityStatus('idle');
+                setAvailabilityNote('');
+
+                try {
+                    const refreshed = await ApiService.getRoomById(roomId);
+                    if (refreshed && refreshed.room) {
+                        setRoomDetails(refreshed.room);
+                    }
+                } catch {
+                }
+                setAvailabilityRevision((n) => n + 1);
 
                 setTimeout(() => {
                     setShowMessage(false);
@@ -397,172 +437,194 @@ const RoomDetailsPage = () => {
 
             <div className="room-details-surface">
                 <div className="room-details-booking">
-            {/* booking alerts are rendered near booking controls (below) */}
+                    <div
+                        className={
+                            isAuthed
+                                ? 'room-details-booking-inner room-details-booking-inner--with-aside'
+                                : 'room-details-booking-inner'
+                        }
+                    >
+                        <div className="room-details-main">
+                            <h2 className="room-details-booking-title">
+                                Room <span className="luna-color">Details</span>
+                            </h2>
 
-            <h2 className="room-details-booking-title">
-                Room <span className="luna-color">Details</span>
-            </h2>
-
-            <div className="room-details-image-wrap">
-                <img src={roomPhotoUrl} alt={roomType} className="room-details-image" />
-            </div>
-
-            <div className="room-details-info">
-                <h3>{roomType}</h3>
-                {roomTagline ? <p className="room-detail-tagline">{roomTagline}</p> : null}
-                <p className="room-detail-price-line">Price: ${roomPrice} / night</p>
-                <p className="room-detail-sleeps">Up to {maxGuests} guests</p>
-                {aboutText ? <p className="room-detail-about">{aboutText}</p> : null}
-
-                {amenitiesInRoom.length > 0 ? (
-                    <>
-                        <h4 className="room-detail-subheading">Amenities in your room</h4>
-                        <ul className="room-detail-amenities-list">
-                            {amenitiesInRoom.map((item) => (
-                                <li key={item}>{item}</li>
-                            ))}
-                        </ul>
-                    </>
-                ) : null}
-
-                <h4 className="room-detail-subheading">Room highlights</h4>
-                <RoomFeatureIconStrip iconKeys={roomFeatureIconKeys} />
-
-                {resortServicesIncluded ? (
-                    <>
-                        <h4 className="room-detail-subheading">Included across the resort</h4>
-                        <p className="room-detail-resort-copy">{resortServicesIncluded}</p>
-                    </>
-                ) : null}
-            </div>
-
-            {isStaff && bookings.length > 0 ? (
-                <div className="room-details-staff-block">
-                    <h3 className="room-details-staff-title">Existing bookings (staff)</h3>
-                    <ul className="booking-list">
-                        {bookings.map((booking, index) => (
-                            <li key={booking.id} className="booking-item">
-                                <span className="booking-number">Booking {index + 1} </span>
-                                <span className="booking-text">
-                                    Check-in: {booking.checkInDate}{' '}
-                                </span>
-                                <span className="booking-text">Out: {booking.checkOutDate}</span>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            ) : null}
-
-            {isAuthed ? (
-                <div className="booking-info">
-                    <button className="book-now-button" onClick={() => setShowDatePicker(true)}>
-                        Book Now
-                    </button>
-
-                    <button className="go-back-button" onClick={() => setShowDatePicker(false)}>
-                        Go Back
-                    </button>
-
-                    {availabilityNote ? (
-                        <p
-                            className={`room-availability room-availability--${availabilityStatus}`}
-                            aria-live="polite"
-                        >
-                            {availabilityNote}
-                        </p>
-                    ) : null}
-
-                    {(showMessage || errorMessage) && (
-                        <div className="booking-alerts" ref={bookingAlertRef}>
-                            {showMessage ? (
-                                <p className="success-message" role="status" aria-live="polite">
-                                    Booking successful! Confirmation code:{' '}
-                                    <span className="booking-confirmation-code">{confirmationCode}</span>
-                                </p>
-                            ) : null}
-                            {errorMessage ? (
-                                <p className="error-message" role="alert">
-                                    {errorMessage}
-                                </p>
-                            ) : null}
-                        </div>
-                    )}
-
-                    {showDatePicker && (
-                        <div className="date-picker-container">
-                            <DatePicker
-                                className="detail-search-field"
-                                calendarClassName="luna-datepicker"
-                                popperClassName="luna-datepicker-popper"
-                                selected={selectedCheckInDate}
-                                onChange={(date) => {
-                                    const normalizedDate = normalizePickerDate(date);
-                                    setCheckInDate(normalizedDate);
-                                }}
-                                selectsStart
-                                startDate={selectedCheckInDate}
-                                endDate={selectedCheckOutDate}
-                                placeholderText="Check-in Date"
-                                dateFormat="dd/MM/yyyy"
-                                showMonthYearDropdown
-                                popperPlacement="bottom-start"
-                            />
-
-                            <DatePicker
-                                className="detail-search-field"
-                                calendarClassName="luna-datepicker"
-                                popperClassName="luna-datepicker-popper"
-                                selected={selectedCheckOutDate}
-                                onChange={(date) => {
-                                    const normalizedDate = normalizePickerDate(date);
-                                    setCheckOutDate(normalizedDate);
-                                }}
-                                selectsEnd
-                                startDate={selectedCheckInDate}
-                                endDate={selectedCheckOutDate}
-                                minDate={minCheckOutDate}
-                                placeholderText="Check-out Date"
-                                dateFormat="dd/MM/yyyy"
-                                showMonthYearDropdown
-                                popperPlacement="bottom-start"
-                            />
-
-                            <div className="guest-container">
-                                <div className="guest-div">
-                                    <label>Guests:</label>
-                                    <input
-                                        type="number"
-                                        min="1"
-                                        max="8"
-                                        value={numAdults}
-                                        onChange={(e) =>
-                                            setNumAdults(parseInt(e.target.value, 10) || 1)
-                                        }
-                                    />
-                                </div>
-
-                                <button className="confirm-booking" onClick={handleConfirmBooking}>
-                                    Confirm Booking
-                                </button>
+                            <div className="room-details-image-wrap">
+                                <img src={roomPhotoUrl} alt={roomType} className="room-details-image" />
                             </div>
-                        </div>
-                    )}
 
-                    {totalPrice > 0 && (
-                        <div className="total-price">
-                            <p>Total Price: ${totalPrice}</p>
-                            <p>Guests: {totalGuests}</p>
-                            <button
-                                type="button"
-                                onClick={acceptBooking}
-                                className="accept-booking"
-                            >
-                                Accept Booking
-                            </button>
+                            <div className="room-details-info">
+                                <h3>{roomType}</h3>
+                                {roomTagline ? <p className="room-detail-tagline">{roomTagline}</p> : null}
+                                <p className="room-detail-price-line">Price: ${roomPrice} / night</p>
+                                <p className="room-detail-sleeps">Up to {maxGuests} guests</p>
+                                {aboutText ? <p className="room-detail-about">{aboutText}</p> : null}
+
+                                {amenitiesInRoom.length > 0 ? (
+                                    <>
+                                        <h4 className="room-detail-subheading">Amenities in your room</h4>
+                                        <ul className="room-detail-amenities-list">
+                                            {amenitiesInRoom.map((item) => (
+                                                <li key={item}>{item}</li>
+                                            ))}
+                                        </ul>
+                                    </>
+                                ) : null}
+
+                                <h4 className="room-detail-subheading">Room highlights</h4>
+                                <RoomFeatureIconStrip iconKeys={roomFeatureIconKeys} />
+
+                                {resortServicesIncluded ? (
+                                    <>
+                                        <h4 className="room-detail-subheading">Included across the resort</h4>
+                                        <p className="room-detail-resort-copy">{resortServicesIncluded}</p>
+                                    </>
+                                ) : null}
+                            </div>
+
+                            {isStaff && bookings.length > 0 ? (
+                                <div className="room-details-staff-block">
+                                    <h3 className="room-details-staff-title">Existing bookings (staff)</h3>
+                                    <ul className="booking-list">
+                                        {bookings.map((booking, index) => (
+                                            <li key={booking.id} className="booking-item">
+                                                <span className="booking-number">Booking {index + 1} </span>
+                                                <span className="booking-text">
+                                                    Check-in: {booking.checkInDate}{' '}
+                                                </span>
+                                                <span className="booking-text">
+                                                    Out: {booking.checkOutDate}
+                                                </span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            ) : null}
                         </div>
-                    )}
-                </div>
-            ) : null}
+
+                        {isAuthed ? (
+                            <aside className="room-details-aside" aria-label="Booking">
+                                <div className="booking-info">
+                                    <button
+                                        type="button"
+                                        className="book-now-button"
+                                        onClick={() => setShowDatePicker(true)}
+                                    >
+                                        Book Now
+                                    </button>
+
+                                    <button type="button" className="go-back-button" onClick={handleBookingGoBack}>
+                                        Go Back
+                                    </button>
+
+                                    {availabilityNote && !showMessage ? (
+                                        <p
+                                            className={`room-availability room-availability--${availabilityStatus}`}
+                                            aria-live="polite"
+                                        >
+                                            {availabilityNote}
+                                        </p>
+                                    ) : null}
+
+                                    {(showMessage || errorMessage) && (
+                                        <div className="booking-alerts" ref={bookingAlertRef}>
+                                            {showMessage ? (
+                                                <p className="success-message" role="status" aria-live="polite">
+                                                    Booking successful! Confirmation code:{' '}
+                                                    <span className="booking-confirmation-code">
+                                                        {confirmationCode}
+                                                    </span>
+                                                </p>
+                                            ) : null}
+                                            {errorMessage ? (
+                                                <p className="error-message" role="alert">
+                                                    {errorMessage}
+                                                </p>
+                                            ) : null}
+                                        </div>
+                                    )}
+
+                                    {showDatePicker && (
+                                        <div className="date-picker-container">
+                                            <DatePicker
+                                                className="detail-search-field"
+                                                calendarClassName="luna-datepicker"
+                                                popperClassName="luna-datepicker-popper"
+                                                selected={selectedCheckInDate}
+                                                onChange={(date) => {
+                                                    const normalizedDate = normalizePickerDate(date);
+                                                    setCheckInDate(normalizedDate);
+                                                }}
+                                                selectsStart
+                                                startDate={selectedCheckInDate}
+                                                endDate={selectedCheckOutDate}
+                                                placeholderText="Check-in Date"
+                                                dateFormat="dd/MM/yyyy"
+                                                showMonthYearDropdown
+                                                popperPlacement="bottom-start"
+                                            />
+
+                                            <DatePicker
+                                                className="detail-search-field"
+                                                calendarClassName="luna-datepicker"
+                                                popperClassName="luna-datepicker-popper"
+                                                selected={selectedCheckOutDate}
+                                                onChange={(date) => {
+                                                    const normalizedDate = normalizePickerDate(date);
+                                                    setCheckOutDate(normalizedDate);
+                                                }}
+                                                selectsEnd
+                                                startDate={selectedCheckInDate}
+                                                endDate={selectedCheckOutDate}
+                                                minDate={minCheckOutDate}
+                                                placeholderText="Check-out Date"
+                                                dateFormat="dd/MM/yyyy"
+                                                showMonthYearDropdown
+                                                popperPlacement="bottom-start"
+                                            />
+
+                                            <div className="guest-container">
+                                                <div className="guest-div">
+                                                    <label>Guests:</label>
+                                                    <input
+                                                        type="number"
+                                                        min="1"
+                                                        max="8"
+                                                        value={numAdults}
+                                                        onChange={(e) =>
+                                                            setNumAdults(parseInt(e.target.value, 10) || 1)
+                                                        }
+                                                    />
+                                                </div>
+
+                                                <button
+                                                    type="button"
+                                                    className="confirm-booking"
+                                                    onClick={handleConfirmBooking}
+                                                >
+                                                    Confirm Booking
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {totalPrice > 0 && (
+                                        <div className="total-price">
+                                            <p>Total Price: ${totalPrice}</p>
+                                            <p>Guests: {totalGuests}</p>
+                                            <button
+                                                type="button"
+                                                onClick={acceptBooking}
+                                                className="accept-booking"
+                                            >
+                                                Accept Booking
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            </aside>
+                        ) : null}
+                    </div>
                 </div>
             </div>
         </div>

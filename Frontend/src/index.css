@@ -46,7 +46,6 @@ body {
     overflow-x: hidden;
 }
 
-/* NAVBAR */
 .navbar {
     display: flex;
     flex-wrap: wrap;
@@ -149,18 +148,44 @@ button.navbar-logout:hover {
     color: var(--luna-turquoise);
 }
 
-/* FIND BOOKING */
 .find-booking-page {
-    padding: 1rem var(--luna-content-gutter) 2rem;
-    margin: 0 0 2.5rem;
     width: 100%;
     max-width: none;
+    margin: 0;
+    padding: 1rem 0 2.5rem;
     box-sizing: border-box;
+    text-align: left;
 }
 
 .find-booking-page h2 {
     color: var(--luna-turquoise-deep);
     margin-bottom: 1rem;
+}
+
+.find-booking-page__inner {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0 var(--luna-content-gutter);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+.find-booking-search-panel {
+    max-width: 28rem;
+}
+
+.find-booking-hint {
+    font-size: 0.95rem;
+    color: #555;
+    margin: -0.25rem 0 1rem;
+    padding: 0.65rem 0.85rem;
+    background: #f0fdfa;
+    border: 1px solid #99f6e4;
+    border-radius: 8px;
+    line-height: 1.5;
 }
 
 .find-booking-form {
@@ -172,7 +197,7 @@ button.navbar-logout:hover {
 
 .find-booking-label {
     display: block;
-    font-weight: bold;
+    font-weight: 700;
     color: #555;
 }
 
@@ -194,18 +219,52 @@ button.navbar-logout:hover {
 
 .find-booking-error {
     color: #b91c1c;
-    margin-top: 1rem;
+    margin-top: 0.75rem;
     font-size: 0.95rem;
 }
 
-.find-booking-hint {
+.find-booking-reservations-section > h3 {
+    margin: 0 0 1rem;
+    color: var(--luna-turquoise-deep);
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.find-booking-overview-empty {
+    margin: 0;
+    padding: 1rem 1.1rem;
     font-size: 0.95rem;
-    color: #555;
-    margin: -0.25rem 0 1rem;
-    padding: 0.65rem 0.85rem;
-    background: #f0fdfa;
-    border: 1px solid #99f6e4;
-    border-radius: 8px;
+    line-height: 1.45;
+    color: #64748b;
+    background: #f8fafc;
+    border-radius: var(--luna-radius);
+    border: 1px dashed rgba(15, 118, 110, 0.28);
+}
+
+.find-booking-empty-msg {
+    margin: 0;
+    padding: 1rem;
+    font-size: 0.95rem;
+    color: #475569;
+    font-weight: 500;
+}
+
+.find-booking-guest-result,
+.find-booking-standalone-hit {
+    max-width: 36rem;
+}
+
+.find-booking-standalone-hit {
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(15, 118, 110, 0.2);
+}
+
+.find-booking-standalone-hit-note {
+    margin: 0 0 0.85rem;
+    font-size: 0.9rem;
+    line-height: 1.45;
+    color: #475569;
 }
 
 .room-bookings-list {
@@ -237,10 +296,10 @@ button.navbar-logout:hover {
 }
 
 .booking-details {
-    margin-top: 1.5rem;
+    margin: 1.5rem auto 0;
     padding: 1.25rem 1.5rem;
     width: 100%;
-    max-width: none;
+    max-width: 28rem;
     border: 1px solid #ddd;
     border-radius: 8px;
     background: var(--luna-page-bg);
@@ -264,7 +323,6 @@ button.navbar-logout:hover {
     border-radius: 6px;
 }
 
-/* AUTH */
 .auth-container {
     max-width: 400px;
     width: calc(100% - 2rem);
@@ -368,7 +426,6 @@ button:hover {
     background-color: var(--luna-turquoise-deep);
 }
 
-/* FOOTER — at end of page, not position: fixed */
 .site-footer {
     flex-shrink: 0;
     width: 100%;
@@ -594,7 +651,6 @@ button:hover {
     color: rgba(236, 254, 255, 0.75);
 }
 
-/* HOME — hero only on main page; height fits banner without extra scroll */
 .home {
     margin-bottom: 2.5rem;
 }
@@ -724,7 +780,6 @@ a.home-all-rooms-button:focus-visible {
     box-sizing: border-box;
 }
 
-/* Room search — full-width band matches navbar tint; fields are white cards */
 .room-search-wrap {
     background-color: var(--luna-navbar-bg);
     border-top: 1px solid var(--luna-border-teal);
@@ -742,7 +797,6 @@ a.home-all-rooms-button:focus-visible {
     box-sizing: border-box;
 }
 
-/* SEARCH */
 .search-container {
     display: flex;
     flex-wrap: wrap;
@@ -916,7 +970,6 @@ a.home-all-rooms-button:focus-visible {
     box-sizing: border-box;
 }
 
-/* ALL ROOMS — align with navbar brand gutter */
 .all-rooms {
     padding-left: var(--luna-content-gutter);
     padding-right: var(--luna-content-gutter);
@@ -991,7 +1044,6 @@ a.home-all-rooms-button:focus-visible {
     gap: 1.15rem;
 }
 
-/* ROOM LIST */
 .room-list-item {
     width: 100%;
     max-width: 100%;
@@ -1095,7 +1147,6 @@ a.room-list-cta-link {
     font-size: 1rem;
 }
 
-/* Room detail — column: login CTA outside; mint band only around room content */
 .room-details-page {
     box-sizing: border-box;
     width: calc(100% - 0.75rem);
@@ -1122,7 +1173,7 @@ a.room-list-cta-link {
 .room-details-booking {
     padding: 1rem clamp(1rem, 3vw, 1.75rem) 1.85rem;
     width: 100%;
-    max-width: 980px;
+    max-width: min(72rem, 100%);
     margin: 0 auto;
     box-sizing: border-box;
     background: var(--luna-page-bg);
@@ -1130,6 +1181,25 @@ a.room-list-cta-link {
     border-left: 3px solid var(--luna-accent-highlight);
     border-radius: var(--luna-radius);
     box-shadow: var(--luna-shadow-card);
+}
+
+.room-details-booking-inner {
+    display: block;
+}
+
+@media (min-width: 960px) {
+    .room-details-booking-inner--with-aside {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(17.5rem, 24rem);
+        gap: 1.25rem 1.75rem;
+        align-items: start;
+    }
+
+    .room-details-aside {
+        position: sticky;
+        top: 1rem;
+        align-self: start;
+    }
 }
 
 .room-details-booking-title {
@@ -1162,11 +1232,52 @@ a.room-list-cta-link {
 }
 
 .booking-info {
-    margin-top: 1.25rem;
+    margin-top: 0;
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.9rem;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 0.85rem;
+    padding: 0.85rem 1rem 1rem;
+    box-sizing: border-box;
+    border: 1px solid rgba(15, 118, 110, 0.2);
+    border-radius: var(--luna-radius);
+    background: #f8fafc;
+}
+
+.room-details-aside .book-now-button,
+.room-details-aside .go-back-button {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.room-details-aside .date-picker-container,
+.room-details-aside .total-price {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.room-details-aside .date-picker-container {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.6rem 0.65rem;
+    padding: 0.75rem 0.7rem;
+}
+
+.room-details-aside .date-picker-container > .react-datepicker-wrapper {
+    min-width: 0;
+}
+
+.room-details-aside .date-picker-container .detail-search-field {
+    font-size: 0.88rem;
+    padding: 9px 8px;
+}
+
+.room-details-aside .confirm-booking {
+    width: 100%;
+    min-width: 0;
+    flex: 1 1 auto;
 }
 
 .booking-alerts {
@@ -1177,7 +1288,7 @@ a.room-list-cta-link {
     width: min(720px, 100%);
     flex: 1 1 100%;
     display: grid;
-    grid-template-columns: repeat(2, minmax(12rem, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.75rem 0.9rem;
     padding: 0.85rem 1rem;
     margin: 0 auto;
@@ -1190,6 +1301,7 @@ a.room-list-cta-link {
 .date-picker-container .react-datepicker-wrapper,
 .date-picker-container .react-datepicker__input-container {
     width: 100%;
+    min-width: 0;
     display: block;
 }
 
@@ -1198,7 +1310,6 @@ a.room-list-cta-link {
     z-index: 4000 !important;
 }
 
-/* React DatePicker (Room details) — force compact popup */
 .luna-datepicker.react-datepicker {
     font-size: 0.82rem !important;
     border-radius: 10px !important;
@@ -1566,7 +1677,6 @@ a.room-booking-login-link.go-back-button {
     background: var(--luna-page-bg);
 }
 
-/* PROFILE */
 .profile-page,
 .edit-profile-page {
     width: 100%;
@@ -1615,14 +1725,225 @@ a.room-booking-login-link.go-back-button {
 
 .profile-details {
     padding: 1rem 1.25rem;
+    max-width: 32rem;
+    margin-left: 0;
+    margin-right: 0;
     border: 1px solid rgba(15, 118, 110, 0.22);
     border-radius: var(--luna-radius);
     background: var(--luna-page-bg);
     box-shadow: var(--luna-shadow-card);
 }
 
+.profile-details > h3 {
+    margin: 0 0 0.65rem;
+    color: var(--luna-turquoise-deep);
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+
 .profile-details + .bookings-section {
-    margin-top: 1.15rem;
+    margin-top: 1.5rem;
+}
+
+.bookings-section {
+    max-width: 100%;
+}
+
+.bookings-section > h3 {
+    margin: 0 0 0.65rem;
+    color: var(--luna-turquoise-deep);
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+
+.bookings-section .booking-list,
+.find-booking-my-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(12.5rem, 1fr));
+    gap: 1rem;
+    align-items: stretch;
+    width: 100%;
+}
+
+.bookings-section .booking-list .profile-booking-card:only-child {
+    grid-column: 1 / -1;
+    max-width: 36rem;
+    justify-self: start;
+}
+
+@media (max-width: 56rem) {
+    .bookings-section .booking-list,
+    .find-booking-my-grid {
+        grid-template-columns: repeat(2, minmax(12.5rem, 1fr));
+    }
+}
+
+@media (max-width: 30rem) {
+    .bookings-section .booking-list,
+    .find-booking-my-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .bookings-section .booking-list .profile-booking-card:only-child {
+        max-width: none;
+    }
+}
+
+.bookings-section__empty {
+    margin: 0;
+    padding: 0.85rem 1rem;
+    font-size: 0.95rem;
+    color: #64748b;
+    background: #f8fafc;
+    border: 1px dashed rgba(15, 118, 110, 0.25);
+    border-radius: var(--luna-radius);
+}
+
+.profile-booking-card {
+    margin: 0;
+    padding: 0;
+    max-width: none;
+    min-width: 0;
+    border: 1px solid rgba(15, 118, 110, 0.22);
+    border-radius: var(--luna-radius);
+    background: var(--luna-page-bg);
+    box-shadow: var(--luna-shadow-card);
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.find-booking-grid-item {
+    min-width: 0;
+}
+
+.find-booking-grid-item--hit {
+    padding: 6px;
+    border-radius: 14px;
+    background: linear-gradient(145deg, #5eead4 0%, #14b8a6 42%, #0f7669 100%);
+    box-shadow:
+        0 6px 22px rgba(15, 118, 110, 0.5),
+        0 0 0 2px #fff;
+    animation: find-booking-hit-pulse 1.05s ease-in-out 2;
+}
+
+.find-booking-grid-item--hit .profile-booking-card {
+    border-width: 2px;
+    border-color: #0f7669;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45);
+}
+
+@keyframes find-booking-hit-pulse {
+    0%,
+    100% {
+        box-shadow:
+            0 6px 22px rgba(15, 118, 110, 0.5),
+            0 0 0 2px #fff;
+    }
+
+    50% {
+        box-shadow:
+            0 10px 32px rgba(15, 118, 110, 0.72),
+            0 0 0 4px #fff;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .find-booking-grid-item--hit {
+        animation: none;
+    }
+}
+
+.profile-booking-card__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(180deg, #f0fdfa 0%, #ecfeff 100%);
+    border-bottom: 1px solid rgba(15, 118, 110, 0.15);
+}
+
+.profile-booking-card__code {
+    font-family: ui-monospace, monospace;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--luna-turquoise-deep);
+    letter-spacing: 0.02em;
+}
+
+.profile-booking-card__room {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #334155;
+    text-align: right;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.profile-booking-dl {
+    margin: 0;
+    padding: 0.65rem 1rem 0.85rem;
+    display: grid;
+    gap: 0;
+}
+
+.profile-booking-dl__row {
+    display: grid;
+    grid-template-columns: minmax(6.5rem, 38%) 1fr;
+    gap: 0.35rem 0.75rem;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+    align-items: baseline;
+}
+
+.profile-booking-dl__row:last-of-type {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.profile-booking-dl__row dt {
+    margin: 0;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #64748b;
+}
+
+.profile-booking-dl__row dd {
+    margin: 0;
+    font-size: 0.92rem;
+    color: #1e293b;
+    font-weight: 500;
+}
+
+.profile-booking-card__media {
+    padding: 0 1rem 1rem;
+    box-sizing: border-box;
+}
+
+.profile-booking-card__img {
+    display: block;
+    width: 100%;
+    max-height: 11rem;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid rgba(15, 118, 110, 0.12);
+}
+
+@media (max-width: 480px) {
+    .profile-booking-dl__row {
+        grid-template-columns: 1fr;
+        gap: 0.15rem;
+    }
+
+    .profile-booking-card__room {
+        text-align: left;
+        width: 100%;
+    }
 }
 
 .profile-edit-field {
@@ -1668,7 +1989,6 @@ a.room-booking-login-link.go-back-button {
     }
 }
 
-/* SERVICES — same light turquoise band as navbar / room search */
 .home-services-wrap {
     background-color: var(--luna-navbar-bg);
     border-top: 1px solid var(--luna-border-teal);
@@ -1831,7 +2151,6 @@ a.room-booking-login-link.go-back-button {
     font-size: 1rem;
 }
 
-/* ROOM OVERVIEW MODAL (larger than service modal) */
 .room-modal-backdrop {
     position: fixed;
     inset: 0;
@@ -2050,7 +2369,6 @@ button.room-modal-secondary-btn:hover {
     background: #f0fdfa;
 }
 
-/* BUTTONS */
 .book-now-button {
     background-color: var(--luna-turquoise);
     color: white;
@@ -2070,7 +2388,6 @@ button.room-modal-secondary-btn:hover {
     box-shadow: 0 3px 12px rgba(13, 148, 136, 0.26);
 }
 
-/* PAGINATION — compact page tiles to the right under View / Book column */
 .pagination-nav {
     display: flex;
     justify-content: flex-end;
@@ -2135,7 +2452,6 @@ button.pagination-button.current-page {
     box-shadow: 0 2px 8px rgba(13, 148, 136, 0.25);
 }
 
-/* RESPONSIVE */
 @media (max-width: 1024px) and (min-width: 769px) {
     :root {
         --luna-content-gutter: 28px;

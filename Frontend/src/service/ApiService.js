@@ -35,8 +35,6 @@ export default class ApiService {
     }
 
     static async getUserProfile() {
-        // In mock mode, only use mock profile when not authenticated (demo browsing).
-        // If a JWT exists, prefer the real backend profile so UI shows the logged-in user.
         if (this.useMock() && !this.isAuthenticated()) {
             return mockApi.mockGetUserProfile();
         }
@@ -49,7 +47,6 @@ export default class ApiService {
 
     static async updateMyProfile(profileUpdates) {
         if (this.useMock() && !this.isAuthenticated()) {
-            // In mock mode we just echo updated fields in local "profile"
             return mockApi.mockUpdateMyProfile(profileUpdates);
         }
 
@@ -78,14 +75,37 @@ export default class ApiService {
     }
 
     static async getUserBookings(userId) {
-        if (this.useMock()) {
+        if (this.useMock() && !this.isAuthenticated()) {
             return mockApi.mockGetUserBookings(userId);
         }
 
         const response = await axios.get(`${this.BASE_URL}/users/get-user-bookings/${userId}`, {
             headers: this.getHeader(),
         });
+
+        if (this.useMock() && this.isAuthenticated()) {
+            const extra = mockApi.getSessionBookingsForUser(userId);
+            const data = response.data;
+            if (data && data.user) {
+                const existing = Array.isArray(data.user.bookings) ? data.user.bookings : [];
+                return {
+                    ...data,
+                    user: {
+                        ...data.user,
+                        bookings: [...extra, ...existing],
+                    },
+                };
+            }
+        }
+
         return response.data;
+    }
+
+    static getSessionBookingsForLoggedInUser(userId) {
+        if (!this.useMock() || !this.isAuthenticated() || userId == null) {
+            return [];
+        }
+        return mockApi.getSessionBookingsForUser(userId);
     }
 
     static async deleteUser(userId) {
@@ -106,7 +126,9 @@ export default class ApiService {
     }
 
     static async getAllAvailableRooms() {
-        const response = await axios.get(`${this.BASE_URL}/rooms/all-available-rooms`);
+        const response = await axios.get(`${this.BASE_URL}/rooms/all-available-rooms`, {
+            headers: this.isAuthenticated() ? this.getHeader() : {},
+        });
         return response.data;
     }
 
@@ -126,7 +148,8 @@ export default class ApiService {
         });
 
         const response = await axios.get(
-            `${this.BASE_URL}/rooms/available-rooms-by-date-and-type?${params.toString()}`
+            `${this.BASE_URL}/rooms/available-rooms-by-date-and-type?${params.toString()}`,
+            { headers: this.isAuthenticated() ? this.getHeader() : {} }
         );
         return response.data;
     }
@@ -136,7 +159,9 @@ export default class ApiService {
             return mockApi.mockGetRoomTypes();
         }
 
-        const response = await axios.get(`${this.BASE_URL}/rooms/types`);
+        const response = await axios.get(`${this.BASE_URL}/rooms/types`, {
+            headers: this.isAuthenticated() ? this.getHeader() : {},
+        });
         return response.data;
     }
 
@@ -145,7 +170,9 @@ export default class ApiService {
             return mockApi.mockGetAllRooms();
         }
 
-        const response = await axios.get(`${this.BASE_URL}/rooms/all`);
+        const response = await axios.get(`${this.BASE_URL}/rooms/all`, {
+            headers: this.isAuthenticated() ? this.getHeader() : {},
+        });
         return response.data;
     }
 
@@ -154,7 +181,9 @@ export default class ApiService {
             return mockApi.mockGetRoomById(roomId);
         }
 
-        const response = await axios.get(`${this.BASE_URL}/rooms/room-by-id/${roomId}`);
+        const response = await axios.get(`${this.BASE_URL}/rooms/room-by-id/${roomId}`, {
+            headers: this.isAuthenticated() ? this.getHeader() : {},
+        });
         return response.data;
     }
 
@@ -175,9 +204,9 @@ export default class ApiService {
         return response.data;
     }
 
-    static async bookRoom(roomId, userId, booking) {
+    static async bookRoom(roomId, userId, booking, booker) {
         if (this.useMock()) {
-            return mockApi.mockBookRoom(roomId, userId, booking);
+            return mockApi.mockBookRoom(roomId, userId, booking, booker);
         }
 
         const response = await axios.post(
@@ -207,7 +236,8 @@ export default class ApiService {
         }
 
         const response = await axios.get(
-            `${this.BASE_URL}/bookings/get-by-confirmation-code/${bookingCode}`
+            `${this.BASE_URL}/bookings/get-by-confirmation-code/${encodeURIComponent(bookingCode)}`,
+            { headers: this.getHeader() }
         );
         return response.data;
     }

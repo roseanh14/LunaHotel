@@ -25,14 +25,12 @@ function App() {
                 <Navbar />
                 <div className="content">
                     <Routes>
-                        {/* Public Routes */}
                         <Route exact path="/home" element={<HomePage />} />
                         <Route exact path="/login" element={<LoginPage />} />
                         <Route path="/register" element={<RegisterPage />} />
                         <Route path="/rooms" element={<AllRoomsPage />} />
                         <Route path="/find-booking" element={<FindBookingPage />} />
 
-                        {/* Protected Routes */}
                         <Route
                             path="/room-details-book/:roomId"
                             element={<RoomDetailsBookingPage />}
@@ -46,7 +44,6 @@ function App() {
                             element={<ProtectedRoute element={<EditProfilePage />} />}
                         />
 
-                        {/* Admin Routes */}
                         <Route path="/admin" element={<AdminRoute element={<AdminPage />} />} />
                         <Route
                             path="/admin/manage-rooms"
@@ -69,7 +66,6 @@ function App() {
                             element={<AdminRoute element={<EditBookingPage />} />}
                         />
 
-                        {/* Fallback Route */}
                         <Route path="*" element={<Navigate to="/login" />} />
                     </Routes>
                 </div>
